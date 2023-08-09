@@ -5,16 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class IndexSlider extends Model
+class Product extends Model
 {
     use HasFactory;
-    protected $table='index_sliders';
+    protected $table='products';
     protected $fillable=[
-      'image',
-      'title',
-      'content',
-      'button_text',
-      'isActive',
-      'button_link'
+      'title_id',
+      'product_image',
+      'background_img',
+      'isActive'
     ];
 }
