@@ -2,9 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CaseStudies;
+use App\Models\CaseStudy;
+use App\Models\Conference;
 use App\Models\Csp;
 use App\Models\Edu;
+use App\Models\Feature;
+use App\Models\FeatureProduct;
+use App\Models\HonorableClient;
 use App\Models\IndexSlider;
+use App\Models\OurTeam;
 use App\Models\Panel;
 use App\Models\Product;
 use Illuminate\Http\Request;
@@ -595,6 +602,7 @@ class IndexController extends Controller
         }
     }
 
+    //Edu
     public function createEdu(Request $request)
     {
         $rules = array(
@@ -689,8 +697,9 @@ class IndexController extends Controller
             ]);
         }
         $index->update([
+            'header_title' => $request->header_title,
+            'heading_description' => $request->heading_description,
             'title' => $request->title,
-            'subtitle' => $request->subtitle,
             'description' => $request->description,
             'button_link' => $request->button_link,
             'button_text' => $request->button_text,
@@ -698,8 +707,10 @@ class IndexController extends Controller
         ]);
 
         $all_data = [
-            'subtitle' => $index->subtitle,
+            'header_title' => $index->title,
+            'heading_description' => $index->heading_description,
             'image' => $index->image,
+            'title' => $index->title,
             'description' => $index->description,
             'button_link' => $index->button_link,
             'button_text' => $index->button_text,
@@ -708,7 +719,178 @@ class IndexController extends Controller
 
         $data = [
             'status' => 200,
-            'message' => "Product updated successfully",
+            'message' => "Edu updated successfully",
+            'data' => $all_data,
+        ];
+
+        return response()->json($data);
+    }
+
+    public function showEdu()
+    {
+        $index = Edu::where('isActive', true)->first();
+
+        $data = [
+            'status' => true,
+            'message' => 'Here are your Edu items',
+            'header_title' => $index->title,
+            'data' => $index,
+        ];
+        return response()->json($data, 200);
+    }
+
+    //Feature products
+    public function CreateFeatureProduct(Request $request)
+    {
+        $rules = array(
+            'title_id' => 'required',
+            'description' => 'required',
+            'master_image' => 'required',
+            'left_image' => 'required',
+            'right_image' => 'required',
+            'caption' => 'required',
+            'button_text' => 'required',
+            'button_link' => 'required',
+        );
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Validation Failed',
+                'errors' => $validator->errors()
+            ], 403);
+        }
+
+        if ($request->input('title_id') != 5) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Feature can only be created with header_title equal to 5',
+                'data' => [],
+            ], 400);
+        }
+
+        $existingPanel = FeatureProduct::where('title_id', $request->input('title_id'))->first();
+        if ($existingPanel) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Feature product with the same title_id already exists',
+                'data' => [],
+            ], 409);
+        }
+
+        $index = new FeatureProduct();
+        if ($panelimage = $request->file('master_image')) {
+            $imageName1 = time() . '-' . uniqid() . '.' . $panelimage->getClientOriginalExtension();
+            $panelimage->move(public_path('featureProduct'), $imageName1);
+        }
+
+        if ($panelimage1 = $request->file('left_image')) {
+            $imageName2 = time() . '-' . uniqid() . '.' . $panelimage1->getClientOriginalExtension();
+            $panelimage1->move(public_path('featureProduct'), $imageName2);
+        }
+
+        if ($panelimage2 = $request->file('right_image')) {
+            $imageName3 = time() . '-' . uniqid() . '.' . $panelimage2->getClientOriginalExtension();
+            $panelimage2->move(public_path('featureProduct'), $imageName3);
+        }
+
+        $index->title_id = $request->title_id;
+        $index->description = $request->description;
+        $index->master_image = $imageName1;
+        $index->left_image = $imageName2;
+        $index->right_image = $imageName3;
+        $index->caption = $request->caption;
+        $index->button_text = $request->button_text;
+        $index->button_link = $request->button_link;
+        $index->save();
+
+        if ($index->save()) {
+            $data = [
+                'status' => true,
+                'message' => 'Feature products successfully created',
+                'data' => $index,
+            ];
+            return response()->json($data, 201);
+        } else {
+            $data = [
+                'status' => false,
+                'message' => 'Error occurred',
+                'data' => [],
+            ];
+            return response()->json($data, 501);
+        }
+    }
+
+    public function UpdateFeatureProduct(Request $request, $id)
+    {
+        $index = FeatureProduct::find($id);
+        if (!$index) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Feature product not found',
+            ], 404);
+        }
+
+        if ($image1 = $request->file('master_image')) {
+            if ($index->master_image && file_exists(public_path('featureProduct') . '/' . $index->master_image)) {
+                unlink(public_path('featureProduct') . '/' . $index->master_image);
+            }
+
+            $imageName1 = time() . '-' . uniqid() . '.' . $image1->getClientOriginalExtension();
+            $image1->move(public_path('featureProduct'), $imageName1);
+
+            $index->update([
+                'master_image' => $imageName1,
+            ]);
+        }
+
+        if ($image2 = $request->file('left_image')) {
+            if ($index->left_image && file_exists(public_path('featureProduct') . '/' . $index->left_image)) {
+                unlink(public_path('featureProduct') . '/' . $index->left_image);
+            }
+
+            $imageName2 = time() . '-' . uniqid() . '.' . $image2->getClientOriginalExtension();
+            $image2->move(public_path('featureProduct'), $imageName2);
+
+            $index->update([
+                'left_image' => $imageName2,
+            ]);
+        }
+
+        if ($image3 = $request->file('right_image')) {
+            if ($index->right_image && file_exists(public_path('featureProduct') . '/' . $index->right_image)) {
+                unlink(public_path('featureProduct') . '/' . $index->right_image);
+            }
+
+            $imageName3 = time() . '-' . uniqid() . '.' . $image3->getClientOriginalExtension();
+            $image3->move(public_path('featureProduct'), $imageName3);
+
+            $index->update([
+                'right_image' => $imageName3,
+            ]);
+        }
+
+        $index->update([
+            'title_id' => $request->title_id,
+            'description' => $request->description,
+            'caption' => $request->caption,
+            'button_link' => $request->button_link,
+            'button_text' => $request->button_text,
+            'isActive' => $request->isActive
+        ]);
+
+        $all_data = [
+            'description' => $index->description,
+            'button_link' => $index->button_link,
+            'button_text' => $index->button_text,
+            'isActive' => $index->isActive
+        ];
+
+        $data = [
+            'status' => 200,
+            'message' => "Feature product updated successfully",
             'title' => $index->title->name,
             'data' => $all_data,
         ];
@@ -716,5 +898,617 @@ class IndexController extends Controller
         return response()->json($data);
     }
 
-    
+    public function FeatureProductDetails()
+    {
+        $pro = FeatureProduct::where('isActive', true)->first();
+
+        $data = [
+            'status' => true,
+            'message' => 'Here feature product details',
+            'title_id' => $pro->title->name,
+            'data' => $pro,
+
+        ];
+        return response()->json($data, 200);
+    }
+
+    //Confirences
+    public function CreateConference(Request $request)
+    {
+        $rules = array(
+            'title_id' => 'required',
+            'master_image' => 'required',
+            'sub_image1' => 'required',
+            'sub_image2' => 'required',
+            'sub_image3' => 'required',
+            'sub_image4' => 'required',
+        );
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Validation Failed',
+                'errors' => $validator->errors()
+            ], 403);
+        }
+
+        if ($request->input('title_id') != 6) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Conference can only be created with header_title equal to 6',
+                'data' => [],
+            ], 400);
+        }
+
+        $existingPanel = Conference::where('title_id', $request->input('title_id'))->first();
+        if ($existingPanel) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Conference with the same title_id already exists',
+                'data' => [],
+            ], 409);
+        }
+
+        $index = new Conference();
+        if ($panelimage = $request->file('master_image')) {
+            $imageName1 = time() . '-' . uniqid() . '.' . $panelimage->getClientOriginalExtension();
+            $panelimage->move(public_path('conference'), $imageName1);
+        }
+
+        if ($panelimage1 = $request->file('sub_image1')) {
+            $imageName2 = time() . '-' . uniqid() . '.' . $panelimage1->getClientOriginalExtension();
+            $panelimage1->move(public_path('conference'), $imageName2);
+        }
+
+        if ($panelimage2 = $request->file('sub_image2')) {
+            $imageName3 = time() . '-' . uniqid() . '.' . $panelimage2->getClientOriginalExtension();
+            $panelimage2->move(public_path('conference'), $imageName3);
+        }
+
+        if ($panelimage3 = $request->file('sub_image3')) {
+            $imageName4 = time() . '-' . uniqid() . '.' . $panelimage3->getClientOriginalExtension();
+            $panelimage3->move(public_path('conference'), $imageName4);
+        }
+
+        if ($panelimage4 = $request->file('sub_image4')) {
+            $imageName5 = time() . '-' . uniqid() . '.' . $panelimage4->getClientOriginalExtension();
+            $panelimage4->move(public_path('conference'), $imageName5);
+        }
+
+        $index->title_id = $request->title_id;
+        $index->master_image = $imageName1;
+        $index->sub_image1 = $imageName2;
+        $index->sub_image2 = $imageName3;
+        $index->sub_image3 = $imageName4;
+        $index->sub_image4 = $imageName5;
+        $index->save();
+
+        if ($index->save()) {
+            $data = [
+                'status' => true,
+                'message' => 'Conference successfully created',
+                'data' => $index,
+            ];
+            return response()->json($data, 201);
+        } else {
+            $data = [
+                'status' => false,
+                'message' => 'Error occurred',
+                'data' => [],
+            ];
+            return response()->json($data, 501);
+        }
+    }
+
+    public function UpdateConference(Request $request, $id)
+    {
+        $index = Conference::find($id);
+        if (!$index) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Conference not found',
+            ], 404);
+        }
+
+        if ($image1 = $request->file('master_image')) {
+            if ($index->master_image && file_exists(public_path('conference') . '/' . $index->master_image)) {
+                unlink(public_path('conference') . '/' . $index->master_image);
+            }
+
+            $imageName1 = time() . '-' . uniqid() . '.' . $image1->getClientOriginalExtension();
+            $image1->move(public_path('conference'), $imageName1);
+
+            $index->update([
+                'master_image' => $imageName1,
+            ]);
+        }
+
+        if ($image2 = $request->file('sub_image1')) {
+            if ($index->sub_image1 && file_exists(public_path('conference') . '/' . $index->sub_image1)) {
+                unlink(public_path('conference') . '/' . $index->sub_image1);
+            }
+
+            $imageName2 = time() . '-' . uniqid() . '.' . $image2->getClientOriginalExtension();
+            $image2->move(public_path('conference'), $imageName2);
+
+            $index->update([
+                'sub_image1' => $imageName2,
+            ]);
+        }
+
+        if ($image3 = $request->file('sub_image2')) {
+            if ($index->sub_image2 && file_exists(public_path('conference') . '/' . $index->sub_image2)) {
+                unlink(public_path('conference') . '/' . $index->sub_image2);
+            }
+
+            $imageName3 = time() . '-' . uniqid() . '.' . $image3->getClientOriginalExtension();
+            $image3->move(public_path('conference'), $imageName3);
+
+            $index->update([
+                'sub_image2' => $imageName3,
+            ]);
+        }
+
+        if ($image4 = $request->file('sub_image3')) {
+            if ($index->sub_image3 && file_exists(public_path('conference') . '/' . $index->sub_image3)) {
+                unlink(public_path('conference') . '/' . $index->sub_image3);
+            }
+
+            $imageName4 = time() . '-' . uniqid() . '.' . $image4->getClientOriginalExtension();
+            $image4->move(public_path('conference'), $imageName4);
+
+            $index->update([
+                'sub_image3' => $imageName4,
+            ]);
+        }
+
+        if ($image5 = $request->file('sub_image4')) {
+            if ($index->sub_image4 && file_exists(public_path('conference') . '/' . $index->sub_image4)) {
+                unlink(public_path('conference') . '/' . $index->sub_image4);
+            }
+
+            $imageName5 = time() . '-' . uniqid() . '.' . $image5->getClientOriginalExtension();
+            $image5->move(public_path('conference'), $imageName5);
+
+            $index->update([
+                'sub_image4' => $imageName5,
+            ]);
+        }
+
+        $index->update([
+            'title_id' => $request->title_id,
+            'isActive' => $request->isActive
+        ]);
+
+        $all_data = [
+            'title_id' => $index->title_id,
+            'isActive' => $index->isActive
+        ];
+
+        $data = [
+            'status' => 200,
+            'message' => "Conference updated successfully",
+            'title' => $index->title->name,
+            'data' => $all_data,
+        ];
+
+        return response()->json($data);
+    }
+
+    public function ConferenceDetails()
+    {
+        $pro = Conference::where('isActive', true)->first();
+
+        $data = [
+            'status' => true,
+            'message' => 'Here feature product details',
+            'title_id' => $pro->title->name,
+            'data' => $pro,
+
+        ];
+        return response()->json($data, 200);
+    }
+
+    //Honorable Clent
+    public function createHonorableClient(Request $request)
+    {
+        $rules = array(
+            'title_id' => 'required',
+            'image' => 'required',
+            'link' => 'required',
+        );
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Validation Failed',
+                'errors' => $validator->errors()
+            ], 403);
+        }
+
+        if ($request->input('title_id') != 7) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Feature can only be created with header_title equal to 7',
+                'data' => [],
+            ], 400);
+        }
+        $index = new HonorableClient();
+        if ($panelimage = $request->file('image')) {
+            $imageName1 = time() . '-' . uniqid() . '.' . $panelimage->getClientOriginalExtension();
+            $panelimage->move(public_path('honorable_client'), $imageName1);
+        }
+
+        $index->title_id = $request->title_id;
+        $index->description = $request->description;
+        $index->image = $imageName1;
+        $index->link = $request->link;
+
+        $index->save();
+
+        if ($index->save()) {
+            $data = [
+                'status' => true,
+                'message' => 'Honorable client successfully created',
+                'data' => $index,
+            ];
+            return response()->json($data, 201);
+        } else {
+            $data = [
+                'status' => false,
+                'message' => 'Error occurred',
+                'data' => [],
+            ];
+            return response()->json($data, 501);
+        }
+    }
+
+    public function updateHonorableClient(Request $request, $id)
+    {
+        $index = HonorableClient::find($id);
+        if (!$index) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Client id not found',
+            ], 404);
+        }
+
+        if ($image1 = $request->file('image')) {
+            if ($index->image && file_exists(public_path('honorable_client') . '/' . $index->image)) {
+                unlink(public_path('honorable_client') . '/' . $index->image);
+            }
+
+            $imageName1 = time() . '-' . uniqid() . '.' . $image1->getClientOriginalExtension();
+            $image1->move(public_path('honorable_client'), $imageName1);
+
+            $index->update([
+                'image' => $imageName1,
+            ]);
+        }
+        $index->update([
+            'title_id' => $request->title_id,
+            'description' => $request->description,
+            'link' => $request->link,
+            'isActive' => $request->isActive
+        ]);
+
+        $all_data = [
+            'image' => $index->image,
+            'description' => $index->description,
+            'link' => $index->button_link,
+            'isActive' => $index->isActive
+        ];
+
+        $data = [
+            'status' => 200,
+            'message' => "Client updated successfully",
+            'title' => $index->title->name,
+            'data' => $all_data,
+        ];
+
+        return response()->json($data);
+    }
+
+    public function honorableClientDetails()
+    {
+        $csps = HonorableClient::where('isActive', true)
+            ->select(['title_id', 'image', 'description', 'link', 'isActive'])
+            ->get();
+
+        $formattedCsps = [];
+
+        foreach ($csps as $csp) {
+            $formattedCsps[] = [
+                'title_id' => $csp->title_id,
+                'image' => $csp->image,
+                'description' => $csp->description,
+                'link' => $csp->link,
+                'isActive' => $csp->isActive
+
+            ];
+        }
+
+        $firstCspTitle = $csps->first()->title->name;
+
+        $data = [
+            'status' => true,
+            'message' => 'Here are your client list:',
+            'title' => $firstCspTitle,
+            'data' => $formattedCsps
+        ];
+
+        return response()->json($data, 200);
+    }
+
+    //Our teams
+    public function createOurTeam(Request $request)
+    {
+        $rules = array(
+            'title_id' => 'required',
+            'name' => 'required',
+            'image' => 'required',
+            'department' => 'required',
+            'designation' => 'required',
+            'sequence' => 'required',
+        );
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Validation Failed',
+                'errors' => $validator->errors()
+            ], 403);
+        }
+
+        if ($request->input('title_id') != 8) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Feature can only be created with header_title equal to 8',
+                'data' => [],
+            ], 400);
+        }
+
+        $existingsequence = OurTeam::where('sequence', $request->input('sequence'))->first();
+        if ($existingsequence) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Same number already existed',
+                'data' => [],
+            ], 409);
+        }
+
+        $index = new OurTeam();
+        if ($panelimage = $request->file('image')) {
+            $imageName1 = time() . '-' . uniqid() . '.' . $panelimage->getClientOriginalExtension();
+            $panelimage->move(public_path('Our team'), $imageName1);
+        }
+
+        $index->title_id = $request->title_id;
+        $index->name = $request->name;
+        $index->image = $imageName1;
+        $index->department = $request->department;
+        $index->designation = $request->designation;
+        $index->sequence = $request->sequence;
+
+        $index->save();
+
+        if ($index->save()) {
+            $data = [
+                'status' => true,
+                'message' => 'Teams successfully created',
+                'data' => $index,
+            ];
+            return response()->json($data, 201);
+        } else {
+            $data = [
+                'status' => false,
+                'message' => 'Error occurred',
+                'data' => [],
+            ];
+            return response()->json($data, 501);
+        }
+    }
+
+    public function updateOurTeam(Request $request, $id)
+    {
+        $index = OurTeam::find($id);
+        if (!$index) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Team member id not found',
+            ], 404);
+        }
+
+        if ($image1 = $request->file('image')) {
+            if ($index->image && file_exists(public_path('Our team') . '/' . $index->image)) {
+                unlink(public_path('Our team') . '/' . $index->image);
+            }
+
+            $imageName1 = time() . '-' . uniqid() . '.' . $image1->getClientOriginalExtension();
+            $image1->move(public_path('Our team'), $imageName1);
+
+            $index->update([
+                'image' => $imageName1,
+            ]);
+        }
+        $index->update([
+            'title_id' => $request->title_id,
+            'name' => $request->name,
+            'department' => $request->department,
+            'designation' => $request->designation,
+            'sequence' => $request->sequence,
+            'isActive' => $request->isActive
+        ]);
+
+        $all_data = [
+            'image' => $index->image,
+            'name' => $index->name,
+            'department' => $index->department,
+            'designation' => $index->designation,
+            'sequence' => $index->sequence,
+            'isActive' => $index->isActive
+        ];
+
+        $data = [
+            'status' => 200,
+            'message' => "Team member updated successfully",
+            'title' => $index->title->name,
+            'data' => $all_data,
+        ];
+
+        return response()->json($data);
+    }
+
+    public function ourTeamMemberList()
+    {
+        $csps = OurTeam::where('isActive', true)
+            ->select(['title_id', 'name', 'image', 'department', 'designation', 'sequence', 'isActive'])
+            ->orderBy('sequence', 'ASC')
+            ->get();
+
+        $formattedCsps = [];
+
+        foreach ($csps as $csp) {
+            $formattedCsps[] = [
+                'title_id' => $csp->title_id,
+                'name' => $csp->name,
+                'image' => $csp->image,
+                'department' => $csp->department,
+                'designation' => $csp->designation,
+                'sequence' => $csp->sequence,
+                'isActive' => $csp->isActive
+
+            ];
+        }
+
+        $firstCspTitle = $csps->first()->title->name;
+
+        $data = [
+            'status' => true,
+            'message' => 'Here are our team member list:',
+            'title' => $firstCspTitle,
+            'data' => $formattedCsps
+        ];
+
+        return response()->json($data, 200);
+    }
+
+    //Case Studies
+    public function createCaseStudies(Request $request)
+    {
+        $rules = array(
+            'title_id' => 'required',
+            'title' => 'required',
+            'description' => 'required'
+        );
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Validation Failed',
+                'errors' => $validator->errors()
+            ], 403);
+        }
+
+        if ($request->input('title_id') != 9) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Case studies can only be created with header_title equal to 9',
+                'data' => [],
+            ], 400);
+        }
+
+        $index = new CaseStudy();
+
+
+        $index->title_id = $request->title_id;
+        $index->title = $request->title;
+        $index->description = $request->description;
+        $index->save();
+
+        if ($index->save()) {
+            $data = [
+                'status' => true,
+                'message' => 'Case studies successfully created',
+                'data' => $index,
+            ];
+            return response()->json($data, 201);
+        } else {
+            $data = [
+                'status' => false,
+                'message' => 'Error occurred',
+                'data' => [],
+            ];
+            return response()->json($data, 501);
+        }
+    } 
+
+    public function updateCaseStudies(Request $request, $id)
+    {
+        $index = CaseStudy::find($id);
+        if (!$index) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Case is not found',
+            ], 404);
+        }
+        $index->update([
+            'title_id' => $request->title_id,
+            'title' => $request->title,
+            'description' => $request->description,
+            'isActive' => $request->isActive
+        ]);
+
+        $all_data = [
+            'title' => $index->title,
+            'description' => $index->description,
+            'isActive' => $index->isActive
+        ];
+
+        $data = [
+            'status' => 200,
+            'message' => "Case studies updated successfully",
+            'data' => $all_data,
+        ];
+
+        return response()->json($data);
+    }
+
+    public function caseStudyList()
+    {
+        $csps = CaseStudy::where('isActive', true)
+            ->select(['title_id', 'title', 'description','isActive'])
+            ->get();
+
+        $formattedCsps = [];
+
+        foreach ($csps as $csp) {
+            $formattedCsps[] = [
+                'title_id' => $csp->title_id,
+                'title' => $csp->title,
+                'description' => $csp->description,
+                'isActive' => $csp->isActive
+
+            ];
+        }
+
+        $firstCspTitle = $csps->first()->title->name;
+
+        $data = [
+            'status' => true,
+            'message' => 'Here are our team member list:',
+            'title' => $firstCspTitle,
+            'data' => $formattedCsps
+        ];
+
+        return response()->json($data, 200);
+    }
 }

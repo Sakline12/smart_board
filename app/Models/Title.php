@@ -26,4 +26,28 @@ class Title extends Model
     {
         return $this->hasMany(Edu::class, 'header_title', 'id');
     }
+
+    public function featureproduct()
+    {
+        return $this->hasMany(FeatureProduct::class, 'title_id', 'id');
+    }
+
+    public function conference()
+    {
+        return $this->hasMany(Conference::class, 'title_id', 'id');
+    }
+
+    public function honorableclient()
+    {
+        return $this->hasMany(honorableclient::class, 'title_id', 'id');
+    }
+
+    public function ourteam()
+    {
+        return $this->hasMany(ourteam::class, 'title_id', 'id');
+    }
+
+    public function casestudy(){
+        return $this->hasMany(CaseStudy::class, 'title_id', 'id');
+    }
 }

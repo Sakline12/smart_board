@@ -60,6 +60,32 @@ Route::delete('delete-csp/{id}',[IndexController::class,'deleteCsp']);
 
 //#Edu
 Route::post('create-edu',[IndexController::class,'createEdu']);  
+Route::post('update-edu/{id}',[IndexController::class,'updateEdu']);
+Route::get('show-edu',[IndexController::class,'showEdu']);
 
+//Feature product
+Route::post('create-feature-product',[IndexController::class,'CreateFeatureProduct']);
+Route::post('update-feature-product/{id}',[IndexController::class,'UpdateFeatureProduct']);
+Route::get('feature-details',[IndexController::class,'FeatureProductDetails']);
+
+//Conference
+Route::post('create-conference',[IndexController::class,'CreateConference']);
+Route::post('update-conference/{id}',[IndexController::class,'UpdateConference']);
+Route::get('conference-details',[IndexController::class,'ConferenceDetails']);
+
+//Honorable Client
+Route::post('create-honorable-client',[IndexController::class,'createHonorableClient']);
+Route::post('update-honorable-client/{id}',[IndexController::class,'updateHonorableClient']);
+Route::get('honorable-client-details',[IndexController::class,'honorableClientDetails']);
+
+//Our teams
+Route::post('create-our-teams',[IndexController::class,'createOurTeam']);
+Route::post('update-our-team-member/{id}',[IndexController::class,'updateOurTeam']);
+Route::get('our-team-member-list',[IndexController::class,'ourTeamMemberList']);
+
+//Case studies
+Route::post('create-case-studies',[IndexController::class,'createCaseStudies']);
+Route::post('update-case-studies/{id}',[IndexController::class,'updateCaseStudies']);
+Route::get('case-study-list',[IndexController::class,'caseStudyList']);
 });
 

@@ -5,23 +5,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class OurTeam extends Model
+class CaseStudy extends Model
 {
     use HasFactory;
-    protected $table='our_teams';
+    protected $table='case_studies';
     protected $fillable=[
       'title_id',
-      'name',
-      'department',
-      'designation',
-      'image',
-      'sequence',
+      'title',
+      'description',
       'isActive'
     ];
 
     
     public function title()
     {
-        return $this->belongsTo(title::class);
+        return $this->belongsTo(Title::class);
     }
 }

@@ -5,17 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class OurTeam extends Model
+class FeatureProduct extends Model
 {
     use HasFactory;
-    protected $table='our_teams';
+    protected $table='feature_products';
     protected $fillable=[
       'title_id',
-      'name',
-      'department',
-      'designation',
-      'image',
-      'sequence',
+      'description',
+      'master_image',
+      'left_image',
+      'right_image',
+      'caption',
+      'button_text',
+      'button_link',
       'isActive'
     ];
 
