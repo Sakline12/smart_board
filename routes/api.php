@@ -31,37 +31,37 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 //Index
 
 //#Index slider
-Route::post('index-slide-create',[IndexController::class,'create_index_slider']);
-Route::get('get-index-slider',[IndexController::class,'show_slider_index']);
-Route::delete('delete-index-slider/{id}',[IndexController::class,'delete_index_slider']);
-Route::post('update-index-slider/{id}',[IndexController::class,'update_index_slider']);
-Route::get('slider-item-list',[IndexController::class,'slider_item_list']);
+Route::post('index-slide-create',[IndexController::class,'createIndexSlider']);
+Route::get('get-index-slider',[IndexController::class,'listOfIndexSlider']);
+Route::delete('delete-index-slider/{id}',[IndexController::class,'deleteIndexSlider']);
+Route::post('update-index-slider/{id}',[IndexController::class,'updateIndexSlider']);
+Route::get('slider-item-list',[IndexController::class,'sliderItemList']);
 Route::post('logout',[AuthController::class,'logout']);
 
 
 //#Product
-Route::post('create-a-product',[IndexController::class,'create_product']);
-Route::get('show-product',[IndexController::class,'show_product']);
-Route::delete('delete-product/{id}',[IndexController::class,'delete_product']);
-Route::post('update-product/{id}',[IndexController::class,'update_product']);
-Route::get('product-item',[IndexController::class,'product_item_list']);
+Route::post('create-a-product',[IndexController::class,'createProduct']);
+Route::get('all-product',[IndexController::class,'allProduct']);
+Route::delete('delete-product/{id}',[IndexController::class,'deleteProduct']);
+Route::post('update-product/{id}',[IndexController::class,'updateProduct']);
+Route::get('product-item',[IndexController::class,'productItemList']);
 
 
 //#Panel
-Route::post('create-pannel',[IndexController::class,'create_panel']);
-Route::get('show-panel',[IndexController::class,'showPanel']);
+Route::post('create-pannel',[IndexController::class,'createPanel']);
+Route::get('all-panel',[IndexController::class,'allPanel']);
 Route::post('update-panel/{id}',[IndexController::class,'updatePanel']);
 
 //#CSP
-Route::post('create-solution-provider',[IndexController::class,'createSolutionProvider']);  
-Route::get('show-csp',[IndexController::class,'showCsp']);
-Route::post('update-csp/{id}',[IndexController::class,'updateCsp']);
-Route::delete('delete-csp/{id}',[IndexController::class,'deleteCsp']);
+Route::post('create-solution-provider',[IndexController::class,'createCompleteSolutionProvider']);  
+Route::get('detailsCompleteSolutionProvider',[IndexController::class,'detailsCompleteSolutionProvider']);
+Route::post('update-complete-solution-provider/{id}',[IndexController::class,'updateCompleteSolutionProvider']);
+Route::delete('delete-complete-solution-provider/{id}',[IndexController::class,'deleteCompleteSolutionProvider']);
 
 //#Edu
-Route::post('create-edu',[IndexController::class,'createEdu']);  
-Route::post('update-edu/{id}',[IndexController::class,'updateEdu']);
-Route::get('show-edu',[IndexController::class,'showEdu']);
+Route::post('create-edu',[IndexController::class,'createEducation']);  
+Route::post('update-edu/{id}',[IndexController::class,'updateEducation']);
+Route::get('show-edu',[IndexController::class,'showEducation']);
 
 //Feature product
 Route::post('create-feature-product',[IndexController::class,'CreateFeatureProduct']);
@@ -87,5 +87,10 @@ Route::get('our-team-member-list',[IndexController::class,'ourTeamMemberList']);
 Route::post('create-case-studies',[IndexController::class,'createCaseStudies']);
 Route::post('update-case-studies/{id}',[IndexController::class,'updateCaseStudies']);
 Route::get('case-study-list',[IndexController::class,'caseStudyList']);
+
+//Testimonial
+Route::post('create-testimonial',[IndexController::class,'createTestimonial']);
+Route::post('update-testimonial/{id}',[IndexController::class,'updateTestimonial']);
+Route::get('testimonial-list',[IndexController::class,'testimonialList']);
 });
 

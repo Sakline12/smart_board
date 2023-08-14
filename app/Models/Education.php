@@ -5,14 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class CaseStudy extends Model
+class Education extends Model
 {
     use HasFactory;
-    protected $table='case_studies';
+    protected $table='educations';
     protected $fillable=[
-      'title_id',
-      'title_name',
+      'header_title',
+      'heading_description',
+      'image',
+      'title',
       'description',
+      'button_text',
+      'button_link',
       'isActive'
     ];
 

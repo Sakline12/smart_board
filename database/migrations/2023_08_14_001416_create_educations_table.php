@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCaseStudiesTable extends Migration
+class CreateEducationsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,16 @@ class CreateCaseStudiesTable extends Migration
      */
     public function up()
     {
-        Schema::create('case_studies', function (Blueprint $table) {
+        Schema::create('educations', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('title_id')->unsigned();
-            $table->foreign('title_id')->references('id')->on('titles')->onDelete('cascade');
+            $table->bigInteger('header_title')->unsigned();
+            $table->foreign('header_title')->references('id')->on('titles')->onDelete('cascade');
+            $table->text('heading_description');
+            $table->string('image');
             $table->string('title');
             $table->text('description');
+            $table->string('button_text');
+            $table->string('button_link');
             $table->boolean('isActive')->default(true)->nullable();
             $table->timestamps();
         });
@@ -31,6 +35,6 @@ class CreateCaseStudiesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('case_studies');
+        Schema::dropIfExists('educations');
     }
 }

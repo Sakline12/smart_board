@@ -5,19 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Edu extends Model
+class About extends Model
 {
     use HasFactory;
-    protected $table='edus';
+    protected $table='abouts';
     protected $fillable=[
       'header_title',
-      'heading_description',
-      'image',
-      'title',
+      'background_image',
+      'question',
       'description',
+      'image',
       'button_text',
       'button_link',
-      'isActive'
     ];
 
     

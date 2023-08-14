@@ -2,18 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\CaseStudies;
 use App\Models\CaseStudy;
 use App\Models\Conference;
 use App\Models\Csp;
 use App\Models\Edu;
-use App\Models\Feature;
+use App\Models\Education;
 use App\Models\FeatureProduct;
 use App\Models\HonorableClient;
 use App\Models\IndexSlider;
 use App\Models\OurTeam;
 use App\Models\Panel;
 use App\Models\Product;
+use App\Models\Testimonial;
+// use App\Models\Testimonial;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -21,7 +22,7 @@ class IndexController extends Controller
 {
 
     //Slider
-    public function create_index_slider(Request $request)
+    public function createIndexSlider(Request $request)
     {
         $rules = array(
             'image' => 'required',
@@ -71,7 +72,7 @@ class IndexController extends Controller
         }
     }
 
-    public function show_slider_index()
+    public function listOfIndexSlider()
     {
         $index = IndexSlider::where('isActive', true)->get();
         $data = [
@@ -82,7 +83,7 @@ class IndexController extends Controller
         return response()->json($data, 200);
     }
 
-    public function delete_index_slider(Request $request, $id)
+    public function deleteIndexSlider(Request $request, $id)
     {
         $index = IndexSlider::where('id', $id)->delete();
         if ($index) {
@@ -102,7 +103,7 @@ class IndexController extends Controller
         }
     }
 
-    public function update_index_slider(Request $request, $id)
+    public function updateIndexSlider(Request $request, $id)
     {
         $index = IndexSlider::find($id);
         if (!$index) {
@@ -150,7 +151,7 @@ class IndexController extends Controller
         return response()->json($data);
     }
 
-    public function slider_item_list()
+    public function sliderItemList()
     {
         $index = IndexSlider::all();
 
@@ -163,7 +164,7 @@ class IndexController extends Controller
     }
 
     //Product
-    public function create_product(Request $request)
+    public function createProduct(Request $request)
     {
         $rules = array(
             'title_id' => 'required',
@@ -224,18 +225,19 @@ class IndexController extends Controller
     }
 
 
-    public function show_product()
+    public function allProduct()
     {
-        $index = Product::where('isActive', true)->get();
+        $index = Product::where('isActive', true)->first();
         $data = [
             'status' => true,
             'message' => 'Here are your product items',
+            'title'=>$index->title->name,
             'data' => $index
         ];
         return response()->json($data, 200);
     }
 
-    public function delete_product(Request $request, $id)
+    public function deleteProduct(Request $request, $id)
     {
         $index = Product::where('id', $id)->delete();
         if ($index) {
@@ -255,7 +257,7 @@ class IndexController extends Controller
         }
     }
 
-    public function update_product(Request $request, $id)
+    public function updateProduct(Request $request, $id)
     {
         $index = Product::find($id);
         if (!$index) {
@@ -308,20 +310,21 @@ class IndexController extends Controller
         return response()->json($data);
     }
 
-    public function product_item_list()
+    public function productItemList()
     {
-        $index = Product::all();
+        $index = Product::first();
 
         $data = [
             'status' => true,
             'message' => "Here are product:",
+            'title'=>$index->title->name,
             'data' => $index
         ];
         return response()->json($data);
     }
 
     //pannel
-    public function create_panel(Request $request)
+    public function createPanel(Request $request)
     {
         $rules = array(
             'title_id' => 'required',
@@ -385,12 +388,13 @@ class IndexController extends Controller
         }
     }
 
-    public function showPanel()
+    public function allPanel()
     {
-        $index = Panel::where('isActive', true)->get();
+        $index = Panel::where('isActive', true)->first();
         $data = [
             'status' => true,
             'message' => 'Here are your index items',
+            'title'=>$index->title->name,
             'data' => $index
         ];
         return response()->json($data, 200);
@@ -441,7 +445,7 @@ class IndexController extends Controller
     }
 
     //csp
-    public function createSolutionProvider(Request $request)
+    public function createCompleteSolutionProvider(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'title_id' => 'required|integer',
@@ -502,7 +506,7 @@ class IndexController extends Controller
         }
     }
 
-    public function showCsp()
+    public function detailsCompleteSolutionProvider()
     {
         $csps = Csp::where('isActive', true)
             ->select(['title_id', 'image', 'subtitle', 'description', 'button_text', 'button_link'])
@@ -532,7 +536,7 @@ class IndexController extends Controller
         return response()->json($data, 200);
     }
 
-    public function updateCsp(Request $request, $id)
+    public function updateCompleteSolutionProvider(Request $request, $id)
     {
         $index = CSP::find($id);
         if (!$index) {
@@ -582,7 +586,7 @@ class IndexController extends Controller
         return response()->json($data);
     }
 
-    public function deleteCsp(Request $request, $id)
+    public function deleteCompleteSolutionProvider(Request $request, $id)
     {
         $index = Csp::where('id', $id)->delete();
         if ($index) {
@@ -603,7 +607,7 @@ class IndexController extends Controller
     }
 
     //Edu
-    public function createEdu(Request $request)
+    public function createEducation(Request $request)
     {
         $rules = array(
             'header_title' => 'required',
@@ -633,7 +637,7 @@ class IndexController extends Controller
             ], 400);
         }
 
-        $existingPanel = Edu::where('header_title', $request->input('header_title'))->first();
+        $existingPanel = Education::where('header_title', $request->input('header_title'))->first();
         if ($existingPanel) {
             return response()->json([
                 'status' => false,
@@ -642,7 +646,7 @@ class IndexController extends Controller
             ], 409);
         }
 
-        $index = new Edu();
+        $index = new Education();
         if ($panelimage = $request->file('image')) {
             $imageName1 = time() . '-' . uniqid() . '.' . $panelimage->getClientOriginalExtension();
             $panelimage->move(public_path('edu'), $imageName1);
@@ -674,9 +678,9 @@ class IndexController extends Controller
         }
     }
 
-    public function updateEdu(Request $request, $id)
+    public function updateEducation(Request $request, $id)
     {
-        $index = Edu::find($id);
+        $index = Education::find($id);
         if (!$index) {
             return response()->json([
                 'status' => false,
@@ -726,9 +730,9 @@ class IndexController extends Controller
         return response()->json($data);
     }
 
-    public function showEdu()
+    public function showEducation()
     {
-        $index = Edu::where('isActive', true)->first();
+        $index = Education::where('isActive', true)->first();
 
         $data = [
             'status' => true,
@@ -1404,7 +1408,7 @@ class IndexController extends Controller
     {
         $rules = array(
             'title_id' => 'required',
-            'title' => 'required',
+            'title_name' => 'required',
             'description' => 'required'
         );
 
@@ -1430,7 +1434,7 @@ class IndexController extends Controller
 
 
         $index->title_id = $request->title_id;
-        $index->title = $request->title;
+        $index->title_name = $request->title_name;
         $index->description = $request->description;
         $index->save();
 
@@ -1449,7 +1453,7 @@ class IndexController extends Controller
             ];
             return response()->json($data, 501);
         }
-    } 
+    }
 
     public function updateCaseStudies(Request $request, $id)
     {
@@ -1484,31 +1488,176 @@ class IndexController extends Controller
 
     public function caseStudyList()
     {
-        $csps = CaseStudy::where('isActive', true)
-            ->select(['title_id', 'title', 'description','isActive'])
+        $cases = CaseStudy::where('isActive', true)
+            ->select(['title_id', 'title_name', 'description', 'isActive'])
             ->get();
 
-        $formattedCsps = [];
+        $formattedcase = [];
 
-        foreach ($csps as $csp) {
-            $formattedCsps[] = [
-                'title_id' => $csp->title_id,
-                'title' => $csp->title,
-                'description' => $csp->description,
-                'isActive' => $csp->isActive
+        foreach ($cases as $case) {
+            $formattedcase[] = [
+                'title_id' => $case->title_id,
+                'title_name' => $case->title_name,
+                'description' => $case->description,
+                'isActive' => $case->isActive
 
             ];
         }
 
-        $firstCspTitle = $csps->first()->title->name;
+        $title_id = $cases->first()->title->name;
 
         $data = [
             'status' => true,
             'message' => 'Here are our team member list:',
-            'title' => $firstCspTitle,
-            'data' => $formattedCsps
+            'title' => $title_id,
+            'data' => $formattedcase
         ];
 
         return response()->json($data, 200);
     }
+
+    //Testimonial
+    public function createTestimonial(Request $request)
+    {
+        $rules = array(
+            'title_id' => 'required',
+            'subtitle_id' => 'required',
+            'image' => 'required',
+            'name' => 'required',
+            'designation' => 'required',
+            'review' => 'required',
+            'feed_back' => 'required'
+        );
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Validation Failed',
+                'errors' => $validator->errors()
+            ], 403);
+        }
+
+        if ($request->input('title_id') != 10) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Testimonial can only be created with header_title equal to 10',
+                'data' => [],
+            ], 400);
+        }
+        $index = new Testimonial();
+        if ($panelimage = $request->file('image')) {
+            $imageName1 = time() . '-' . uniqid() . '.' . $panelimage->getClientOriginalExtension();
+            $panelimage->move(public_path('Testimonial'), $imageName1);
+        }
+
+        $index->title_id = $request->title_id;
+        $index->subtitle_id = $request->subtitle_id;
+        $index->name = $request->name;
+        $index->image = $imageName1;
+        $index->designation = $request->designation;
+        $index->review = $request->review;
+        $index->feed_back = $request->feed_back;
+        $index->save();
+
+        if ($index->save()) {
+            $data = [
+                'status' => true,
+                'message' => 'Testimonial successfully created',
+                'data' => $index,
+            ];
+            return response()->json($data, 201);
+        } else {
+            $data = [
+                'status' => false,
+                'message' => 'Error occurred',
+                'data' => [],
+            ];
+            return response()->json($data, 501);
+        }
+    }
+
+    public function updateTestimonial(Request $request, $id)
+    {
+        $index = Testimonial::find($id);
+        if (!$index) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Testimonial id not found',
+            ], 404);
+        }
+
+        if ($image1 = $request->file('image')) {
+            if ($index->image && file_exists(public_path('Testimonial') . '/' . $index->image)) {
+                unlink(public_path('Testimonial') . '/' . $index->image);
+            }
+
+            $imageName1 = time() . '-' . uniqid() . '.' . $image1->getClientOriginalExtension();
+            $image1->move(public_path('Testimonial'), $imageName1);
+
+            $index->update([
+                'image' => $imageName1,
+            ]);
+        }
+        $index->update([
+            'title_id' => $request->title_id,
+            'sub_title_id'=>$request->sub_title_id,
+            'name' => $request->name,
+            'designation'=>$request->designation,
+            'review'=>$request->review,
+            'feed_back'=>$request->feed_back,
+            'isActive' => $request->isActive
+        ]);
+
+        $all_data = [
+            'title' => $index->title->name,
+            'sub_title'=>$index->subtitle->name,
+            'name' => $index->name,
+            'review' => $index->review,
+            'isActive' => $index->isActive
+        ];
+
+        $data = [
+            'status' => 200,
+            'message' => "Testimonial updated successfully",
+            'data' => $all_data,
+        ];
+
+        return response()->json($data);
+    }
+
+    public function testimonialList()
+    {
+        $cases = Testimonial::where('isActive', true)
+            ->select(['title_id', 'subtitle_id','name','image','review','feed_back','isActive'])
+            ->get();
+
+        $formattedcase = [];
+
+        foreach ($cases as $case) {
+            $formattedcase[] = [
+                'title_id' => $case->title_id,
+                'subtitle_id' => $case->subtitle_id,
+                'name' => $case->name,
+                'image'=>$case->image,
+                'review'=>$case->review,
+                'feed_back'=>$case->feed_back,
+                'isActive' => $case->isActive
+            ];
+        }
+
+        $title_id = $cases->first()->title->name;
+        $subtitle=$cases->first()->subtitle->name;
+        $data = [
+            'status' => true,
+            'message' => 'Here are our team member list:',
+            'title' => $title_id,
+            'sub_tilte'=>$subtitle,
+            'data' => $formattedcase
+        ];
+
+        return response()->json($data, 200);
+    }
+    
 }

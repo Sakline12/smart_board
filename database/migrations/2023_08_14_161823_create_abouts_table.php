@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateEdusTable extends Migration
+class CreateAboutsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,17 +13,16 @@ class CreateEdusTable extends Migration
      */
     public function up()
     {
-        Schema::create('edus', function (Blueprint $table) {
+        Schema::create('abouts', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('header_title')->unsigned();
             $table->foreign('header_title')->references('id')->on('titles')->onDelete('cascade');
-            $table->text('heading_description');
-            $table->string('image');
-            $table->string('title');
+            $table->string('background_image');
+            $table->string('question');
             $table->text('description');
+            $table->string('image');
             $table->string('button_text');
             $table->string('button_link');
-            $table->boolean('isActive')->default(true)->nullable();
             $table->timestamps();
         });
     }
@@ -35,6 +34,6 @@ class CreateEdusTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('edus');
+        Schema::dropIfExists('abouts');
     }
 }

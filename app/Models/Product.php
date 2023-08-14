@@ -15,4 +15,9 @@ class Product extends Model
       'background_img',
       'isActive'
     ];
+
+    public function title()
+    {
+        return $this->belongsTo(title::class);
+    }
 }

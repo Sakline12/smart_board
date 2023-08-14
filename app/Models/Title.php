@@ -17,14 +17,19 @@ class Title extends Model
     ];
 
 
+    public function product()
+    {
+        return $this->hasMany(product::class, 'title_id', 'id');
+    }
+
     public function csp()
     {
         return $this->hasMany(csp::class, 'title_id', 'id');
     }
 
-    public function edu()
+    public function education()
     {
-        return $this->hasMany(Edu::class, 'header_title', 'id');
+        return $this->hasMany(education::class, 'header_title', 'id');
     }
 
     public function featureproduct()
@@ -48,6 +53,14 @@ class Title extends Model
     }
 
     public function casestudy(){
-        return $this->hasMany(CaseStudy::class, 'title_id', 'id');
+        return $this->hasOne(casestudy::class, 'title_id', 'id');
+    }
+
+    public function testimonial(){
+        return $this->hasMany(testimonial::class,'title_id','id');
+    }
+
+    public function panel(){
+        return $this->hasMany(panel::class,'title_id','id');
     }
 }

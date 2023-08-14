@@ -15,4 +15,9 @@ class Panel extends Model
       'image',
       'isActive'
     ];
+
+    public function title()
+    {
+        return $this->belongsTo(title::class);
+    }
 }
