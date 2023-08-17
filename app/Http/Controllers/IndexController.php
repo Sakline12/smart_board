@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\CaseStudy;
 use App\Models\Conference;
 use App\Models\Csp;
-use App\Models\Edu;
 use App\Models\Education;
 use App\Models\FeatureProduct;
 use App\Models\HonorableClient;
@@ -14,7 +13,6 @@ use App\Models\OurTeam;
 use App\Models\Panel;
 use App\Models\Product;
 use App\Models\Testimonial;
-// use App\Models\Testimonial;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 

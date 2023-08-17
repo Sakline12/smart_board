@@ -5,24 +5,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class About extends Model
+class Podium extends Model
 {
     use HasFactory;
-    protected $table='abouts';
+    protected $table='podiums';
     protected $fillable=[
-      'header_title',
-      'background_image',
-      'question',
+      'title_id',
       'description',
+      'background_image',
       'image',
-      'button_text',
-      'button_link',
       'isActive'
     ];
 
-    
     public function title()
     {
-        return $this->belongsTo(title::class,'header_title');
+        return $this->belongsTo(title::class);
     }
 }

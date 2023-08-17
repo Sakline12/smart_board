@@ -1,8 +1,12 @@
 <?php
 
+use App\Http\Controllers\AboutController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\IndexController;
+use App\Http\Controllers\InteractiveController;
+use App\Http\Controllers\PodiumController;
 use App\Models\IndexSlider;
+use App\Models\InteractiveSlider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -92,5 +96,51 @@ Route::get('case-study-list',[IndexController::class,'caseStudyList']);
 Route::post('create-testimonial',[IndexController::class,'createTestimonial']);
 Route::post('update-testimonial/{id}',[IndexController::class,'updateTestimonial']);
 Route::get('testimonial-list',[IndexController::class,'testimonialList']);
+
+//About
+Route::post('create-about',[AboutController::class,'createAbout']);
+Route::post('about-update/{id}',[AboutController::class,'updateAbout']);
+Route::get('about-details',[AboutController::class,'aboutDetails']);
+
+//Interactie panel
+Route::post('create-interactive-slider',[InteractiveController::class,'createInteractiveSlider']);
+Route::post('update-interactive-slider/{id}',[InteractiveController::class,'updateInteractiveSlider']);
+Route::get('interactive-slider-details',[InteractiveController::class,'InteractiveSliderDetails']);
+
+//Device
+Route::post('create-device',[InteractiveController::class,'createDevice']);
+Route::post('update-device-item/{id}',[InteractiveController::class,'updateDevice']);
+Route::get('device-items-details',[InteractiveController::class,'deviceItems']);
+
+//Specification
+Route::post('create-interactive-specification',[InteractiveController::class,'createInteractiveSpecification']);
+Route::post('update-interactive-specification/{id}',[InteractiveController::class,'updateInteractiveSpecification']);
+Route::get('list-of-InteractiveSpecification',[InteractiveController::class,'listOfInteractiveSpecification']);
+
+//video link
+Route::post('create-video-link',[InteractiveController::class,'addVideoLink']);
+Route::post('update-video-link/{id}',[InteractiveController::class,'updateVideoLink']);
+Route::get('video-link-details',[InteractiveController::class,'videoLinkDetails']);
+
+//Podium introduction
+Route::post('create-podium-introduction',[PodiumController::class,'createPodiumIntroduction']);
+Route::post('update-podium-introduction/{id}',[PodiumController::class,'updatePodiumIntroduction']);
+Route::get('podium-introduction-details',[PodiumController::class,'podiumIntroductionDetails']);
+
+
+//Podium
+Route::post('create-a-podium',[PodiumController::class,'createPodium']);
+Route::post('update-podium/{id}',[PodiumController::class,'updatePodium']);
+Route::get('podium-details',[PodiumController::class,'podiumDetails']);
+
+//Screen share
+Route::post('create-screen-share',[PodiumController::class,'createScreenShare']);
+Route::post('update-screen-share/{id}',[PodiumController::class,'updateScreenShare']);
+Route::get('screen-share-details',[PodiumController::class,'screenShareDetails']);
+
+//Wireless device
+Route::post('create-wireless-device',[PodiumController::class,'createWirelessDevice']);
+Route::post('update-wireless-device/{id}',[PodiumController::class,'updateWirelessDevice']);
+Route::get('details-wireless-device',[PodiumController::class,'wirelessDeviceDetails']);
 });
 

@@ -63,4 +63,37 @@ class Title extends Model
     public function panel(){
         return $this->hasMany(panel::class,'title_id','id');
     }
+
+    public function about(){
+        return $this->hasMany(about::class,'header_title','id');
+    }
+
+    public function interactiveslider(){
+        return $this->hasOne(interactiveslider::class,'title_id','id');
+    }
+
+    public function device(){
+        return $this->hasOne(device::class,'title_id','id');
+    }
+
+    public function iteractivespecification(){
+        return $this->hasOne(iteractivespecification::class,'title_id','id');
+    }
+
+    public function podiumintroduction(){
+        return $this->hasOne(podiumintroduction::class,'title_id','id');
+    }
+    
+    public function screenshare(){
+        return $this->hasOne(screenshare::class,'title_id','id');
+    }
+
+    public function podium(){
+        return $this->hasOne(podium::class,'title_id','id');
+    }
+
+    public function wirelessdevice(){
+        return $this->hasOne(wirelessdevice::class,'title_id','id');
+    }
+
 }

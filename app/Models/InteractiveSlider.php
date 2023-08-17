@@ -5,24 +5,22 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class About extends Model
+class InteractiveSlider extends Model
 {
     use HasFactory;
-    protected $table='abouts';
+    protected $table='interactive_sliders';
     protected $fillable=[
-      'header_title',
+      'title_id',
+      'subtitle',
       'background_image',
-      'question',
-      'description',
       'image',
-      'button_text',
-      'button_link',
+      'icon_link',
       'isActive'
     ];
 
     
     public function title()
     {
-        return $this->belongsTo(title::class,'header_title');
+        return $this->belongsTo(title::class);
     }
 }

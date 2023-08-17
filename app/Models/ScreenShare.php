@@ -5,24 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class About extends Model
+class ScreenShare extends Model
 {
     use HasFactory;
-    protected $table='abouts';
+    protected $table='screen_shares';
     protected $fillable=[
-      'header_title',
-      'background_image',
-      'question',
+      'title_id',
       'description',
-      'image',
-      'button_text',
-      'button_link',
       'isActive'
     ];
 
-    
     public function title()
     {
-        return $this->belongsTo(title::class,'header_title');
+        return $this->belongsTo(title::class);
     }
 }

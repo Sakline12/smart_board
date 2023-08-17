@@ -13,8 +13,7 @@ class AuthController extends Controller
 {
     public function register(Request $request)
     {
-
-        $rules = array(
+        $validator = Validator::make($request->all(), [
             'first_name' => 'required',
             'last_name' => 'required',
             'email' =>  'required|email|max:255|unique:users',
@@ -23,10 +22,7 @@ class AuthController extends Controller
             'phone' => 'required',
             'designation_id' => 'required',
             'department_id' => 'required'
-        );
-
-
-        $validator = Validator::make($request->all(), $rules);
+        ]);
 
         if ($validator->fails()) {
             return response()->json([
