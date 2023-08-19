@@ -2,9 +2,12 @@
 
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\InteractiveController;
 use App\Http\Controllers\PodiumController;
+use App\Http\Controllers\SignageController;
+use App\Models\Contact;
 use App\Models\IndexSlider;
 use App\Models\InteractiveSlider;
 use Illuminate\Http\Request;
@@ -142,5 +145,58 @@ Route::get('screen-share-details',[PodiumController::class,'screenShareDetails']
 Route::post('create-wireless-device',[PodiumController::class,'createWirelessDevice']);
 Route::post('update-wireless-device/{id}',[PodiumController::class,'updateWirelessDevice']);
 Route::get('details-wireless-device',[PodiumController::class,'wirelessDeviceDetails']);
+
+//Anotation
+Route::post('create-anotation',[PodiumController::class,'createAnotation']);
+Route::post('update-anotation/{id}',[PodiumController::class,'updateAnnotation']);
+Route::get('anotation-details',[PodiumController::class,'anotationDetails']);
+
+//Podium feature
+Route::post('create-podium-feature',[PodiumController::class,'createPodiumFeature']);
+Route::post('update-podium-feature/{id}',[PodiumController::class,'updatePodiumFeature']);
+Route::get('details-podium-feature',[PodiumController::class,'detailsPodiumFeature']);
+
+//Podium psenatation
+Route::post('create-podium-presentation',[PodiumController::class,'createPodiumPresentation']);
+Route::post('update-podium-presentation/{id}',[PodiumController::class,'updatePodiumPresentation']);
+Route::get('podium-prsentation-list',[PodiumController::class,'podiumPrsentationList']);
+
+//signage introduction
+Route::post('create-signage-introduction',[SignageController::class,'createSignageIntroduction']);
+Route::post('update-signage-introduction/{id}',[SignageController::class,'updateSignageIntroduction']);
+Route::get('signage-introduction-details',[SignageController::class,'signageIntroductionDetails']);
+
+//Signage
+Route::post('signage-create',[SignageController::class,'createSignage']);
+Route::post('update-a-signage-itme/{id}',[SignageController::class,'updateSignageItems']);
+Route::get('signage-details',[SignageController::class,'signageDetails']);
+
+//signage slider
+Route::post('create-signage-slider',[SignageController::class,'createSignageSlider']);
+Route::post('update-signage-slider/{id}',[SignageController::class,'updateSignageSlider']);
+Route::get('details-signage-slider',[SignageController::class,'detailsOfSlignageSlider']);
+
+//siognage specification
+Route::post('create-signage-specification',[SignageController::class,'createSignageSpecification']);
+Route::post('update-signage-specification-items/{id}',[SignageController::class,'updateSignageSpecification']);
+Route::get('list-of-signage-specification',[SignageController::class,'listOfSignageSpecification']);
+
+//signage video link
+Route::post('signage-add-link',[SignageController::class,'addVideoLink']);
+Route::post('update-signage-video-link/{id}',[SignageController::class,'updateVideoLink']);
+Route::get('signage-video-link-details',[SignageController::class,'videoLinkDetails']);
+
+//Contact introduction
+Route::post('create-contact-introduction',[ContactController::class,'createContactIntroduction']);
+Route::post('update-contact-introduction/{id}',[ContactController::class,'updateContactIntroduction']);
+Route::get('contact-introduction-details',[ContactController::class,'contactIntroductionDetails']);
+
+//Location
+Route::post('create-a-location',[ContactController::class,'createLocation']);
+Route::post('update-a-location/{id}',[ContactController::class,'updateLocation']);
+Route::get('location-details',[ContactController::class,'locationDetails']);
+
+//Form
+Route::post('send-a-mail',[ContactController::class,'mailSent']);
 });
 

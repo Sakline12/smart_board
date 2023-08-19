@@ -96,4 +96,38 @@ class Title extends Model
         return $this->hasOne(wirelessdevice::class,'title_id','id');
     }
 
+    public function anotation(){
+        return $this->hasOne(anotation::class,'title_id','id');
+    }
+
+    public function podiumfeature(){
+        return $this->hasOne(podiumfeature::class,'title_id','id');
+    }
+
+    
+    public function podiumpresentation(){
+        return $this->hasOne(podiumpresentation::class,'title_id','id');
+    }
+
+    public function signageintroduction(){
+        return $this->hasOne(signageintroduction::class,'title_id','id');
+    }
+
+    public function signage(){
+        return $this->hasOne(signage::class,'title_id','id');
+    }
+
+    public function signageslider(){
+        return $this->hasOne(signageslider::class,'title_id','id');
+    }
+
+    
+    public function signagespecification(){
+        return $this->hasOne(signagespecification::class,'title_id','id');
+    }
+    
+
+    public function contactintroduction(){
+        return $this->hasOne(contactintroduction::class,'title_id','id');
+    }
 }

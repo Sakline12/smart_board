@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Anotation;
 use App\Models\Podium;
+use App\Models\PodiumFeature;
 use App\Models\PodiumIntroduction;
+use App\Models\PodiumPresentation;
 use App\Models\ScreenShare;
 use App\Models\WirelessDevice;
 use Illuminate\Http\Request;
@@ -538,4 +541,383 @@ class PodiumController extends Controller
         return response()->json($data, 200);
     }
 
+    //Anotation
+    public function createAnotation(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'title_id' => 'required',
+            'sub_title' => 'required',
+            'field_one' => 'required',
+            'field_two' => 'required',
+            'field_three' => 'required',
+            'background_image' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Validation Failed',
+                'errors' => $validator->errors()
+            ], 403);
+        }
+
+        if ($request->input('title_id') != 19) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Anotation can only be created with title equal to 19',
+                'data' => [],
+            ], 400);
+        }
+
+        $existingPanel = Anotation::where('title_id', $request->input('title_id'))->first();
+        if ($existingPanel) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Anotation with the same title_id already exists',
+                'data' => [],
+            ], 409);
+        }
+
+
+        $podium = new Anotation();
+        if ($panelimage = $request->file('background_image')) {
+            $imageName1 = time() . '-' . uniqid() . '.' . $panelimage->getClientOriginalExtension();
+            $panelimage->move(public_path('Anotation'), $imageName1);
+        }
+
+
+        $podium->title_id = $request->title_id;
+        $podium->background_image = $imageName1;
+        $podium->sub_title = $request->sub_title;
+        $podium->field_one = $request->field_one;
+        $podium->field_two = $request->field_two;
+        $podium->field_three = $request->field_three;
+        $podium->save();
+
+        if ($podium->save()) {
+            $data = [
+                'status' => true,
+                'message' => 'Anotation device successfully created',
+                'data' => $podium,
+            ];
+            return response()->json($data, 201);
+        } else {
+            $data = [
+                'status' => false,
+                'message' => 'Error occurred',
+                'data' => [],
+            ];
+            return response()->json($data, 501);
+        }
+    }
+
+    public function updateAnnotation(Request $request, $id)
+    {
+        $podium = Anotation::find($id);
+        if (!$podium) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Anotation not found',
+            ], 404);
+        }
+
+        if ($image1 = $request->file('background_image')) {
+            if ($podium->background_image && file_exists(public_path('Anotation') . '/' . $podium->background_image)) {
+                unlink(public_path('Anotation') . '/' . $podium->background_image);
+            }
+
+            $imageName1 = time() . '-' . uniqid() . '.' . $image1->getClientOriginalExtension();
+            $image1->move(public_path('Anotation'), $imageName1);
+
+            $podium->background_image = $imageName1;
+        }
+
+        $podium->title_id = $request->title_id;
+        $podium->sub_title = $request->sub_title;
+        $podium->field_one = $request->field_one;
+        $podium->field_two = $request->field_two;
+        $podium->field_three = $request->field_three;
+        $podium->isActive = $request->isActive;
+        $podium->save();
+
+        $all_data = [
+            'sub_title' => $podium->sub_title,
+            'field_one' => $podium->field_one,
+            'field_two' => $podium->field_two,
+            'field_three' => $podium->field_three,
+            'background_image' => $podium->background_image,
+            'isActive' => $podium->isActive
+        ];
+
+        $data = [
+            'status' => 200,
+            'message' => "Anotation updated successfully",
+            'title_id' => $podium->title->name,
+            'data' => $all_data,
+        ];
+
+        return response()->json($data);
+    }
+
+    public function anotationDetails()
+    {
+        $data = Anotation::where('isActive', true)->first();
+        $title = $data->title->name;
+        $data = [
+            'status' => true,
+            'message' => 'Here anotation details:',
+            'title' => $title,
+            'data' => $data,
+
+        ];
+        return response()->json($data, 200);
+    }
+
+    //Features
+    public function createPodiumFeature(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'title_id' => 'required',
+            'description' => 'required',
+            'background_image' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Validation Failed',
+                'errors' => $validator->errors()
+            ], 403);
+        }
+
+        if ($request->input('title_id') != 20) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Podium feature can only be created with title equal to 20',
+                'data' => [],
+            ], 400);
+        }
+
+        $existingPanel = PodiumFeature::where('title_id', $request->input('title_id'))->first();
+        if ($existingPanel) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Podium feature with the same title_id already exists',
+                'data' => [],
+            ], 409);
+        }
+
+        $podium = new PodiumFeature();
+        if ($panelimage1 = $request->file('background_image')) {
+            $imageName2 = time() . '-' . uniqid() . '.' . $panelimage1->getClientOriginalExtension();
+            $panelimage1->move(public_path('Podium feature'), $imageName2);
+        }
+
+        $podium->title_id = $request->title_id;
+        $podium->description = $request->description;
+        $podium->background_image = $imageName2;
+
+        $podium->save();
+
+        if ($podium->save()) {
+            $data = [
+                'status' => true,
+                'message' => 'Podium feature successfully created',
+                'data' => $podium,
+            ];
+            return response()->json($data, 201);
+        } else {
+            $data = [
+                'status' => false,
+                'message' => 'Error occurred',
+                'data' => [],
+            ];
+            return response()->json($data, 501);
+        }
+    }
+
+    public function updatePodiumFeature(Request $request, $id)
+    {
+        $podium = PodiumFeature::find($id);
+        if (!$podium) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Podium feature not found',
+            ], 404);
+        }
+
+        if ($image1 = $request->file('background_image')) {
+            if ($podium->background_image && file_exists(public_path('Podium feature') . '/' . $podium->background_image)) {
+                unlink(public_path('Podium feature') . '/' . $podium->background_image);
+            }
+
+            $imageName1 = time() . '-' . uniqid() . '.' . $image1->getClientOriginalExtension();
+            $image1->move(public_path('Podium feature'), $imageName1);
+
+            $podium->background_image = $imageName1;
+        }
+
+        $podium->title_id = $request->title_id;
+        $podium->description = $request->description;
+        $podium->isActive = $request->isActive;
+        $podium->save();
+
+        $all_data = [
+            'description' => $podium->description,
+            'background_image' => $podium->background_image,
+            'isActive' => $podium->isActive
+        ];
+
+        $data = [
+            'status' => 200,
+            'message' => "Podium features updated successfully",
+            'title_id' => $podium->title->name,
+            'data' => $all_data,
+        ];
+
+        return response()->json($data);
+    }
+
+    public function detailsPodiumFeature()
+    {
+        $data = PodiumFeature::where('isActive', true)->first();
+        $title = $data->title->name;
+        $data = [
+            'status' => true,
+            'message' => 'Here podium feature details:',
+            'title' => $title,
+            'data' => $data,
+
+        ];
+        return response()->json($data, 200);
+    }
+
+    //Presentation
+    public function createPodiumPresentation(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'title_id' => 'required',
+            'subtitle_id' => 'required',
+            'image_id_one' => 'required',
+            'image_id_two' => 'required',
+            'image_id_three' => 'required',
+            'name' => 'required',
+        ]);
+    
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Validation Failed',
+                'errors' => $validator->errors(),
+            ], 400);
+        }
+    
+        $existingPodium = PodiumPresentation::where('name', $request->input('name'))
+            ->first();
+    
+        if ($existingPodium) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Podium presentation with the same title_id and subtitle_id already exists',
+                'data' => [],
+            ], 409);
+        }
+    
+        $podium = new PodiumPresentation();
+        $podium->title_id = $request->input('title_id');
+        $podium->subtitle_id = $request->input('subtitle_id');
+        $podium->image_id_one = $request->input('image_id_one');
+        $podium->image_id_two = $request->input('image_id_two');
+        $podium->image_id_three = $request->input('image_id_three');
+        $podium->name = $request->input('name');
+    
+        if ($podium->save()) {
+            $data = [
+                'status' => true,
+                'message' => 'Podium presentation successfully created',
+                'data' => $podium,
+            ];
+            return response()->json($data, 201);
+        } else {
+            $data = [
+                'status' => false,
+                'message' => 'Error occurred',
+                'data' => [],
+            ];
+            return response()->json($data, 500);
+        }
+    }
+
+    public function updatePodiumPresentation(Request $request, $id)
+    {
+        $podium = PodiumPresentation::find($id);
+        if (!$podium) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Podium prsentation not found',
+            ], 404);
+        }
+        $podium->title_id = $request->title_id;
+        $podium->subtitle_id = $request->subtitle_id;
+        $podium->image_id_one = $request->image_id_one;
+        $podium->image_id_two = $request->image_id_two;
+        $podium->image_id_three = $request->image_id_three;
+        $podium->name=$request->name;
+        $podium->isActive = $request->isActive;
+        $podium->save();
+        $all_data = [
+            'subtitle_id' => $podium->subtitle_id,
+            'title_id' => $podium->title_id,
+            'image_id_one' => $podium->image_id_one,
+            'image_id_two' => $podium->image_id_two,
+            'image_id_three' => $podium->image_id_three,
+            'isActive' => $podium->isActive
+        ];
+
+        $data = [
+            'status' => 200,
+            'message' => "Podium presentation updated successfully",
+            'title_id' => $podium->title->name,
+            'data' => $all_data,
+        ];
+
+        return response()->json($data);
+    }
+    
+    public function podiumPrsentationList()
+    {
+        $cases = PodiumPresentation::where('isActive', true)
+            ->with(['title', 'subtitle', 'imageOne', 'imageTwo', 'imageThree'])
+            ->get();
+    
+        $formattedCases = [];
+    
+        foreach ($cases as $case) {
+            $formattedCases[] = [
+                'name' => $case->name,
+                'isActive' => $case->isActive
+            ];
+        }
+    
+        $titleName = $cases->first()->title->name;
+        $subtitleName = $cases->first()->subtitle->name;
+        $imageIdOne = $cases->first()->imageOne->image;
+        $imageIdTwo = $cases->first()->imageTwo->image;
+        $imageIdThree = $cases->first()->imageThree->image;
+    
+        $data = [
+            'status' => true,
+            'message' => 'Here are our device items list:',
+            'title' => $titleName,
+            'sub_title' => $subtitleName,
+            'image_one' => $imageIdOne,
+            'image_two' => $imageIdTwo,
+            'image_three' => $imageIdThree,
+            'data' => $formattedCases
+        ];
+    
+        return response()->json($data, 200);
+    }
+    
+    
 }

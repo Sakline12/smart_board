@@ -25,4 +25,9 @@ class SubTitle extends Model
   {
     return $this->hasOne(device::class, 'subtitle_id', 'id');
   }
+
+  public function podiumpresentation()
+  {
+    return $this->hasOne(podiumpresentation::class, 'subtitle_id', 'id');
+  }
 }

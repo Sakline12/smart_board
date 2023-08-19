@@ -5,24 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class DeviceImage extends Model
+class ContactIntroduction extends Model
 {
     use HasFactory;
-    protected $table='device_images';
+    protected $table='contact_introductions';
     protected $fillable=[
-      'image',
-      'category',
+      'title_id',
+      'background_image',
       'isActive'
     ];
 
     
     public function title()
     {
-        return $this->belongsTo(title::class,'image_id','id');
+        return $this->belongsTo(title::class);
     }
-
-
-    
-
-
 }

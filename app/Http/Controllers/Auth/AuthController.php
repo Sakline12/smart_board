@@ -106,7 +106,7 @@ class AuthController extends Controller
                     'department' => $user->department->name,
                 ];
 
-                return response()->json([$data]);
+                return response()->json($data);
             }
         } catch (\Throwable $th) {
             return response()->json([

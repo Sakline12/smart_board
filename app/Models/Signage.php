@@ -5,24 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class DeviceImage extends Model
+class Signage extends Model
 {
     use HasFactory;
-    protected $table='device_images';
+    protected $table='signages';
     protected $fillable=[
-      'image',
-      'category',
+      'title_id',
+      'name',
       'isActive'
     ];
 
-    
     public function title()
     {
-        return $this->belongsTo(title::class,'image_id','id');
+        return $this->belongsTo(title::class);
     }
-
-
-    
-
-
 }
