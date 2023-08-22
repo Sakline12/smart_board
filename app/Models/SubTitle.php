@@ -13,7 +13,7 @@ class SubTitle extends Model
     'name',
     'description',
     'category',
-    'isActive'
+    'is_active'
   ];
 
   public function testimonial()

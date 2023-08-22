@@ -17,8 +17,8 @@ class CreateTitlesTable extends Migration
             $table->id();
             $table->string('name');
             $table->text('description')->nullable();
-            $table->string('category');
-            $table->boolean('isActive')->default(true)->nullable();
+            $table->string('category')->nullable();
+            $table->boolean('is_active')->default(true)->nullable();
             $table->timestamps();
         });
     }

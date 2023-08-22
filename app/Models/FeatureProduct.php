@@ -18,7 +18,7 @@ class FeatureProduct extends Model
       'caption',
       'button_text',
       'button_link',
-      'isActive'
+      'is_active'
     ];
 
     

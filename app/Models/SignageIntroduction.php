@@ -15,7 +15,7 @@ class SignageIntroduction extends Model
       'header_link',
       'image',
       'background_image',
-      'isActive'
+      'is_active'
     ];
 
     public function title()

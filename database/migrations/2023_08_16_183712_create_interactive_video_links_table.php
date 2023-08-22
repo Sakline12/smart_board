@@ -15,10 +15,10 @@ class CreateInteractiveVideoLinksTable extends Migration
     {
         Schema::create('interactive_video_links', function (Blueprint $table) {
             $table->id();
-            $table->string('link');
+            $table->text('link');
             $table->string('name')->nullable();
             $table->string('category')->nullable();
-            $table->boolean('isActive')->default(true)->nullable();
+            $table->boolean('is_active')->default(true)->nullable();
             $table->timestamps();
         });
     }

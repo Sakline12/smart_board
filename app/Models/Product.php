@@ -13,7 +13,7 @@ class Product extends Model
       'title_id',
       'product_image',
       'background_img',
-      'isActive'
+      'is_active'
     ];
 
     public function title()

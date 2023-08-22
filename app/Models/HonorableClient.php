@@ -14,7 +14,7 @@ class HonorableClient extends Model
       'description',
       'image',
       'link',
-      'isActive'
+      'is_active'
     ];
 
     

@@ -13,7 +13,7 @@ class Contact extends Model
       'mail',
       'subject',
       'message',
-      'isActive'
+      'is_active'
     ];
 
     

@@ -11,7 +11,7 @@ class SignageVideoLink extends Model
     protected $table='signage_video_links';
     protected $fillable=[
       'link_name',
-      'isActive'
+      'is_active'
     ];
 
     

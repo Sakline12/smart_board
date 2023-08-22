@@ -15,7 +15,7 @@ class SignageSpecification extends Model
       'inch_86_ifp',
       'inch_75_ifp',
       'inch_65_ifp',
-      'isActive'
+      'is_active'
     ];
 
     

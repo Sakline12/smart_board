@@ -16,7 +16,7 @@ class Conference extends Model
       'sub_image2',
       'sub_image3',
       'sub_image4',
-      'isActive'
+      'is_active'
     ];
 
     

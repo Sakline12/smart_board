@@ -21,10 +21,10 @@ class CreateFeatureProductsTable extends Migration
             $table->string('master_image');
             $table->string('left_image');
             $table->string('right_image');
-            $table->string('caption');
+            $table->text('caption');
             $table->string('button_text');
             $table->string('button_link');
-            $table->boolean('isActive')->default(true)->nullable();
+            $table->boolean('is_active')->default(true)->nullable();
             $table->timestamps();
         });
     }

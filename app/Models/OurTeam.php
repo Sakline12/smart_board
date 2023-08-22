@@ -16,7 +16,7 @@ class OurTeam extends Model
       'designation',
       'image',
       'sequence',
-      'isActive'
+      'is_active'
     ];
 
     

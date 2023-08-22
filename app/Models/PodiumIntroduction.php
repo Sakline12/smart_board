@@ -18,7 +18,7 @@ class PodiumIntroduction extends Model
       'button_text_two',
       'button_link_one',
       'button_link_two',
-      'isActive'
+      'is_active'
     ];
 
     public function title()

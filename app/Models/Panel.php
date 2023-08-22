@@ -13,7 +13,7 @@ class Panel extends Model
       'title_id',
       'description',
       'image',
-      'isActive'
+      'is_active'
     ];
 
     public function title()

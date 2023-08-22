@@ -15,15 +15,14 @@ class SignageController extends Controller
     //signage introduction
     public function createSignageIntroduction(Request $request)
     {
-        $rules = array(
+
+        $validator = Validator::make($request->all(), [
             'title_id' => 'required',
             'header' => 'required',
             'image' => 'required',
             'background_image' => 'required',
             'header_link' => 'required'
-        );
-
-        $validator = Validator::make($request->all(), $rules);
+        ]);
 
         if ($validator->fails()) {
             return response()->json([
@@ -125,14 +124,14 @@ class SignageController extends Controller
             'title_id' => $request->title_id,
             'header' => $request->header,
             'header_link' => $request->header_link,
-            'isActive' => $request->isActive
+            'is_active' => $request->is_active
         ]);
 
         $all_data = [
             'title_id' => $signage->title_id,
             'header' => $signage->header,
             'header_link' => $signage->header_link,
-            'isActive' => $signage->isActive
+            'is_active' => $signage->is_active
         ];
 
         $data = [
@@ -146,7 +145,21 @@ class SignageController extends Controller
 
     public function signageIntroductionDetails()
     {
-        $data = SignageIntroduction::where('isActive', true)->first();
+        $data = SignageIntroduction::where('is_active', true)->first();
+
+        $data = [
+            'status' => true,
+            'message' => 'Here signage introduction details:',
+            'title' => $data->title->name,
+            'data' => $data,
+
+        ];
+        return response()->json($data, 200);
+    }
+
+    public function signageIntroductionInfo()
+    {
+        $data = SignageIntroduction::first();
 
         $data = [
             'status' => true,
@@ -161,12 +174,10 @@ class SignageController extends Controller
     //signage
     public function createSignage(Request $request)
     {
-        $rules = array(
+        $validator = Validator::make($request->all(), [
             'title_id' => 'required',
             'name' => 'required',
-        );
-
-        $validator = Validator::make($request->all(), $rules);
+        ]);
 
         if ($validator->fails()) {
             return response()->json([
@@ -227,12 +238,12 @@ class SignageController extends Controller
 
         $signage->title_id = $request->title_id;
         $signage->name = $request->name;
-        $signage->isActive = $request->isActive;
+        $signage->is_active = $request->is_active;
         $signage->save();
 
         $all_data = [
             'name' => $signage->name,
-            'isActive' => $signage->isActive
+            'is_active' => $signage->is_active
         ];
 
         $data = [
@@ -247,7 +258,7 @@ class SignageController extends Controller
 
     public function signageDetails()
     {
-        $signages = Signage::where('isActive', true)
+        $signages = Signage::where('is_active', true)
             ->get();
 
         $formattedsignages = [];
@@ -255,7 +266,34 @@ class SignageController extends Controller
         foreach ($signages as $signage) {
             $formattedsignages[] = [
                 'name' => $signage->name,
-                'isActive' => $signage->isActive
+                'is_active' => $signage->is_active
+            ];
+        }
+
+        $titleName = $signages->first()->title->name;
+        $description = $signage->first()->title->description;
+
+        $data = [
+            'status' => true,
+            'message' => 'Here are our signage items list:',
+            'title' => $titleName,
+            'description' => $description,
+            'data' => $formattedsignages
+        ];
+
+        return response()->json($data, 200);
+    }
+
+    public function signageInfo()
+    {
+        $signages = Signage::get();
+
+        $formattedsignages = [];
+
+        foreach ($signages as $signage) {
+            $formattedsignages[] = [
+                'name' => $signage->name,
+                'is_active' => $signage->is_active
             ];
         }
 
@@ -311,7 +349,7 @@ class SignageController extends Controller
             ], 409);
         }
 
-        $signage = new SignageSlider();
+        $signageslider = new SignageSlider();
         if ($panelimage = $request->file('image_one')) {
             $imageName1 = time() . '-' . uniqid() . '.' . $panelimage->getClientOriginalExtension();
             $panelimage->move(public_path('Signage slide'), $imageName1);
@@ -327,17 +365,17 @@ class SignageController extends Controller
             $panelimage2->move(public_path('Signage slide'), $imageName3);
         }
 
-        $signage->title_id = $request->title_id;
-        $signage->image_one = $imageName1;
-        $signage->image_two = $imageName2;
-        $signage->image_three = $imageName3;
-        $signage->save();
+        $signageslider->title_id = $request->title_id;
+        $signageslider->image_one = $imageName1;
+        $signageslider->image_two = $imageName2;
+        $signageslider->image_three = $imageName3;
+        $signageslider->save();
 
-        if ($signage->save()) {
+        if ($signageslider->save()) {
             $data = [
                 'status' => true,
                 'message' => 'Signage slider successfully created',
-                'data' => $signage,
+                'data' => $signageslider,
             ];
             return response()->json($data, 201);
         } else {
@@ -352,8 +390,8 @@ class SignageController extends Controller
 
     public function updateSignageSlider(Request $request, $id)
     {
-        $signage = SignageSlider::find($id);
-        if (!$signage) {
+        $signage_slider = SignageSlider::find($id);
+        if (!$signage_slider) {
             return response()->json([
                 'status' => false,
                 'message' => 'Signage sliders image not found',
@@ -361,55 +399,55 @@ class SignageController extends Controller
         }
 
         if ($image1 = $request->file('image_one')) {
-            if ($signage->image_one && file_exists(public_path('Signage slide') . '/' . $signage->image_one)) {
-                unlink(public_path('Signage slide') . '/' . $signage->image_one);
+            if ($signage_slider->image_one && file_exists(public_path('Signage slide') . '/' . $signage_slider->image_one)) {
+                unlink(public_path('Signage slide') . '/' . $signage_slider->image_one);
             }
 
             $imageName1 = time() . '-' . uniqid() . '.' . $image1->getClientOriginalExtension();
             $image1->move(public_path('Signage slide'), $imageName1);
 
-            $signage->image_one = $imageName1;
+            $signage_slider->image_one = $imageName1;
         }
 
         if ($image2 = $request->file('image_two')) {
-            if ($signage->image_two && file_exists(public_path('Signage slide') . '/' . $signage->image_two)) {
-                unlink(public_path('Signage slide') . '/' . $signage->image_two);
+            if ($signage_slider->image_two && file_exists(public_path('Signage slide') . '/' . $signage_slider->image_two)) {
+                unlink(public_path('Signage slide') . '/' . $signage_slider->image_two);
             }
 
             $imageName2 = time() . '-' . uniqid() . '.' . $image2->getClientOriginalExtension();
             $image2->move(public_path('Signage slide'), $imageName2);
 
-            $signage->image_two = $imageName2;
+            $signage_slider->image_two = $imageName2;
         }
 
         if ($image3 = $request->file('image_three')) {
-            if ($signage->image_three && file_exists(public_path('Signage slide') . '/' . $signage->image_three)) {
-                unlink(public_path('Signage slide') . '/' . $signage->image_three);
+            if ($signage_slider->image_three && file_exists(public_path('Signage slide') . '/' . $signage_slider->image_three)) {
+                unlink(public_path('Signage slide') . '/' . $signage_slider->image_three);
             }
 
             $imageName3 = time() . '-' . uniqid() . '.' . $image3->getClientOriginalExtension();
             $image3->move(public_path('Signage slide'), $imageName3);
 
-            $signage->image_three = $imageName3;
+            $signage_slider->image_three = $imageName3;
         }
 
 
 
-        $signage->title_id = $request->title_id;
-        $signage->isActive = $request->isActive;
-        $signage->save();
+        $signage_slider->title_id = $request->title_id;
+        $signage_slider->is_active = $request->is_active;
+        $signage_slider->save();
 
         $all_data = [
-            'image_one' => $signage->image_one,
-            'image_two' => $signage->image_two,
-            'image_three' => $signage->image_three,
-            'isActive' => $signage->isActive
+            'image_one' => $signage_slider->image_one,
+            'image_two' => $signage_slider->image_two,
+            'image_three' => $signage_slider->image_three,
+            'is_active' => $signage_slider->is_active
         ];
 
         $data = [
             'status' => 200,
             'message' => "sitgange slider image successfully",
-            'title_id' => $signage->title->name,
+            'title_id' => $signage_slider->title->name,
             'data' => $all_data,
         ];
 
@@ -418,7 +456,21 @@ class SignageController extends Controller
 
     public function detailsOfSlignageSlider()
     {
-        $data = SignageSlider::where('isActive', true)->first();
+        $data = SignageSlider::where('is_active', true)->first();
+
+        $data = [
+            'status' => true,
+            'message' => 'Here signage slider details:',
+            'title' => $data->title->name,
+            'data' => $data,
+
+        ];
+        return response()->json($data, 200);
+    }
+
+    public function infoOfSlignageSlider()
+    {
+        $data = SignageSlider::first();
 
         $data = [
             'status' => true,
@@ -457,20 +509,20 @@ class SignageController extends Controller
             ], 400);
         }
 
-        $signage = new SignageSpecification();
-        $signage->title_id = $request->input('title_id');
-        $signage->feature = $request->input('feature');
-        $signage->inch_86_ifp = $request->input('inch_86_ifp');
-        $signage->inch_75_ifp = $request->input('inch_75_ifp');
-        $signage->inch_65_ifp = $request->input('inch_65_ifp');
-        $signage->save();
+        $signage_specification = new SignageSpecification();
+        $signage_specification->title_id = $request->input('title_id');
+        $signage_specification->feature = $request->input('feature');
+        $signage_specification->inch_86_ifp = $request->input('inch_86_ifp');
+        $signage_specification->inch_75_ifp = $request->input('inch_75_ifp');
+        $signage_specification->inch_65_ifp = $request->input('inch_65_ifp');
+        $signage_specification->save();
 
 
-        if ($signage->save()) {
+        if ($signage_specification->save()) {
             $data = [
                 'status' => true,
                 'message' => 'Signage specification successfully created',
-                'data' => $signage,
+                'data' => $signage_specification,
             ];
             return response()->json($data, 201);
         } else {
@@ -485,30 +537,30 @@ class SignageController extends Controller
 
     public function updateSignageSpecification(Request $request, $id)
     {
-        $signage = SignageSpecification::find($id);
-        if (!$signage) {
+        $signage_specification = SignageSpecification::find($id);
+        if (!$signage_specification) {
             return response()->json([
                 'status' => false,
-                'message' => 'Signage items not found',
+                'message' => 'signage_specification items not found',
             ], 404);
         }
 
-        $signage->update([
+        $signage_specification->update([
             'title_id' => $request->title_id,
             'feature' => $request->feature,
             'inch_86_ifp' => $request->inch_86_ifp,
             'inch_75_ifp' => $request->inch_75_ifp,
             'inch_65_ifp' => $request->inch_65_ifp,
-            'isActive' => $request->isActive
+            'is_active' => $request->is_active
         ]);
 
         $all_data = [
-            'title_id' => $signage->title->name,
-            'feature' => $signage->feature,
-            'inch_86_ifp' => $signage->inch_86_ifp,
-            'inch_75_ifp' => $signage->inch_75_ifp,
-            'inch_65_ifp' => $signage->inch_65_ifp,
-            'isActive' => $signage->isActive
+            'title_id' => $signage_specification->title->name,
+            'feature' => $signage_specification->feature,
+            'inch_86_ifp' => $signage_specification->inch_86_ifp,
+            'inch_75_ifp' => $signage_specification->inch_75_ifp,
+            'inch_65_ifp' => $signage_specification->inch_65_ifp,
+            'is_active' => $signage_specification->is_active
         ];
 
         $data = [
@@ -522,23 +574,23 @@ class SignageController extends Controller
 
     public function listOfSignageSpecification()
     {
-        $signages = SignageSpecification::where('isActive', true)
-            ->select(['title_id', 'feature', 'inch_86_ifp', 'inch_75_ifp', 'inch_65_ifp', 'isActive'])
+        $signage_specification = SignageSpecification::where('is_active', true)
+            ->select(['title_id', 'feature', 'inch_86_ifp', 'inch_75_ifp', 'inch_65_ifp', 'is_active'])
             ->get();
 
         $formatteditem = [];
 
-        foreach ($signages as $item) {
+        foreach ($signage_specification as $item) {
             $formatteditem[] = [
                 'feature' => $item->feature,
                 'inch_86_ifp' => $item->inch_86_ifp,
                 'inch_75_ifp' => $item->inch_75_ifp,
                 'inch_65_ifp' => $item->inch_65_ifp,
-                'isActive' => $item->isActive
+                'is_active' => $item->is_active
             ];
         }
 
-        $title_id = $signages->first()->title->name;
+        $title_id = $signage_specification->first()->title->name;
         $data = [
             'status' => true,
             'message' => 'Here are our signage specification list:',
@@ -548,6 +600,36 @@ class SignageController extends Controller
 
         return response()->json($data, 200);
     }
+
+    public function infoOfSignageSpecification()
+    {
+        $signage_specification = SignageSpecification::select(['title_id', 'feature', 'inch_86_ifp', 'inch_75_ifp', 'inch_65_ifp', 'is_active'])
+            ->get();
+
+        $formatteditem = [];
+
+        foreach ($signage_specification as $item) {
+            $formatteditem[] = [
+                'feature' => $item->feature,
+                'inch_86_ifp' => $item->inch_86_ifp,
+                'inch_75_ifp' => $item->inch_75_ifp,
+                'inch_65_ifp' => $item->inch_65_ifp,
+                'is_active' => $item->is_active
+            ];
+        }
+
+        $title_id = $signage_specification->first()->title->name;
+        $data = [
+            'status' => true,
+            'message' => 'Here are our signage specification list:',
+            'title' => $title_id,
+            'data' => $formatteditem
+        ];
+
+        return response()->json($data, 200);
+    }
+
+    
 
     //video link
     public function addVideoLink(Request $request)
@@ -607,12 +689,12 @@ class SignageController extends Controller
 
         $video->update([
             'link_name' => $request->link_name,
-            'isActive' => $request->isActive
+            'is_active' => $request->is_active
         ]);
 
         $all_data = [
             'link_name' => $video->link_name,
-            'isActive' => $video->isActive
+            'is_active' => $video->is_active
         ];
 
         $data = [
@@ -626,7 +708,7 @@ class SignageController extends Controller
 
     public function videoLinkDetails()
     {
-        $data = SignageVideoLink::where('isActive', true)->first();
+        $data = SignageVideoLink::where('is_active', true)->first();
 
         $data = [
             'status' => true,
@@ -637,5 +719,16 @@ class SignageController extends Controller
         return response()->json($data, 200);
     }
 
-    
+    public function videoLinkInfo()
+    {
+        $data = SignageVideoLink::first();
+
+        $data = [
+            'status' => true,
+            'message' => 'Here video details',
+            'data' => $data,
+
+        ];
+        return response()->json($data, 200);
+    }
 }

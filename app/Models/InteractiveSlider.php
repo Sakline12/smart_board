@@ -15,7 +15,7 @@ class InteractiveSlider extends Model
       'background_image',
       'image',
       'icon_link',
-      'isActive'
+      'is_active'
     ];
 
     

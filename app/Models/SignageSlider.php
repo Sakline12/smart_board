@@ -14,7 +14,7 @@ class SignageSlider extends Model
       'image_one',
       'image_two',
       'image_three',
-      'isActive'
+      'is_active'
     ];
 
     public function title()

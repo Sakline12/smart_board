@@ -13,7 +13,7 @@ class CaseStudy extends Model
       'title_id',
       'title_name',
       'description',
-      'isActive'
+      'is_active'
     ];
 
     

@@ -14,7 +14,7 @@ class IndexSlider extends Model
       'title',
       'content',
       'button_text',
-      'isActive',
+      'is_active',
       'button_link'
     ];
 }

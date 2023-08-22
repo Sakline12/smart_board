@@ -21,7 +21,7 @@ class CreateInteractiveSpecificationsTable extends Migration
             $table->string('inch_86_ifp');
             $table->string('inch_75_ifp');
             $table->string('inch_65_ifp');
-            $table->boolean('isActive')->default(true)->nullable();
+            $table->boolean('is_active')->default(true)->nullable();
             $table->timestamps();
         });
     }

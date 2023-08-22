@@ -12,7 +12,7 @@ class Signage extends Model
     protected $fillable=[
       'title_id',
       'name',
-      'isActive'
+      'is_active'
     ];
 
     public function title()

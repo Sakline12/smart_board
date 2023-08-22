@@ -16,7 +16,7 @@ class PodiumPresentation extends Model
       'image_id_two',
       'image_id_three',
       'name',
-      'isActive'
+      'is_active'
     ];
 
     public function title()

@@ -20,7 +20,7 @@ class CreateSignageSlidersTable extends Migration
             $table->string('image_one');
             $table->string('image_two');
             $table->string('image_three');
-            $table->boolean('isActive')->default(true)->nullable();
+            $table->boolean('is_active')->default(true)->nullable();
             $table->timestamps();
         });
     }

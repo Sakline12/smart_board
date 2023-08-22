@@ -16,7 +16,8 @@ class Testimonial extends Model
       'name',
       'designation',
       'review',
-      'feed_back'
+      'feed_back',
+      'is_active'
     ];
 
     public function title()

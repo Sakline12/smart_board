@@ -21,8 +21,8 @@ class CreateDevicesTable extends Migration
             $table->foreign('subtitle_id')->references('id')->on('sub_titles')->onDelete('cascade');
             $table->bigInteger('image_id')->unsigned();
             $table->foreign('image_id')->references('id')->on('device_images')->onDelete('cascade');
-            $table->string('name');
-            $table->boolean('isActive')->default(true)->nullable();
+            $table->text('name');
+            $table->boolean('is_active')->default(true)->nullable();
             $table->timestamps();
         });
     }

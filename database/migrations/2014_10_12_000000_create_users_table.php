@@ -20,14 +20,10 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('image')->nullable();
-            // $table->bigInteger('designation_id')->unsigned();
-            // $table->foreign('designation_id')->references('id')->on('designations')->onDelete('cascade');
-            // $table->bigInteger('department_id')->unsigned();
-            // $table->foreign('department_id')->references('id')->on('departments')->onDelete('cascade');
             $table->text('address');
             $table->string('phone');
             $table->string('password');
-            $table->boolean('isActive')->default(true)->nullable();
+            $table->boolean('is_active')->default(true)->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

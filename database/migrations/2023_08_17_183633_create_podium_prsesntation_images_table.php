@@ -17,7 +17,7 @@ class CreatePodiumPrsesntationImagesTable extends Migration
             $table->id();
             $table->string('image');
             $table->string('category')->nullable();
-            $table->boolean('isActive')->default(true)->nullable();
+            $table->boolean('is_active')->default(true)->nullable();
             $table->timestamps();
         });
     }

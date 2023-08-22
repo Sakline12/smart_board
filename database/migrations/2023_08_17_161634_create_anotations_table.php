@@ -18,11 +18,11 @@ class CreateAnotationsTable extends Migration
             $table->bigInteger('title_id')->unsigned();
             $table->foreign('title_id')->references('id')->on('titles')->onDelete('cascade');
             $table->string('sub_title');
-            $table->string('field_one');
-            $table->string('field_two');
-            $table->string('field_three');
+            $table->text('field_one');
+            $table->text('field_two');
+            $table->text('field_three');
             $table->string('background_image');
-            $table->boolean('isActive')->default(true)->nullable();
+            $table->boolean('is_active')->default(true)->nullable();
             $table->timestamps();
         });
     }

@@ -10,17 +10,15 @@ class AboutController extends Controller
 {
     public function createAbout(Request $request)
     {
-        $rules = array(
+        $validator = Validator::make($request->all(), [
             'header_title' => 'required',
             'background_image' => 'required',
             'question' => 'required',
             'description' => 'required',
             'image' => 'required',
             'button_text' => 'required',
-            'button_link'=>'required'
-        );
-
-        $validator = Validator::make($request->all(), $rules);
+            'button_link' => 'required'
+        ]);
 
         if ($validator->fails()) {
             return response()->json([
@@ -47,7 +45,7 @@ class AboutController extends Controller
             ], 409);
         }
 
-        $index = new About();
+        $about = new About();
         if ($panelimage = $request->file('background_image')) {
             $imageName1 = time() . '-' . uniqid() . '.' . $panelimage->getClientOriginalExtension();
             $panelimage->move(public_path('About'), $imageName1);
@@ -58,20 +56,20 @@ class AboutController extends Controller
             $panelimage1->move(public_path('About'), $imageName2);
         }
 
-        $index->header_title = $request->header_title;
-        $index->background_image = $imageName1;
-        $index->question = $request->question;
-        $index->description = $request->description;
-        $index->image=$imageName2;
-        $index->button_text = $request->button_text;
-        $index->button_link = $request->button_link;
-        $index->save();
+        $about->header_title = $request->header_title;
+        $about->background_image = $imageName1;
+        $about->question = $request->question;
+        $about->description = $request->description;
+        $about->image = $imageName2;
+        $about->button_text = $request->button_text;
+        $about->button_link = $request->button_link;
+        $about->save();
 
-        if ($index->save()) {
+        if ($about->save()) {
             $data = [
                 'status' => true,
                 'message' => 'About successfully created',
-                'data' => $index,
+                'data' => $about,
             ];
             return response()->json($data, 201);
         } else {
@@ -86,8 +84,8 @@ class AboutController extends Controller
 
     public function updateAbout(Request $request, $id)
     {
-        $index = About::find($id);
-        if (!$index) {
+        $about = About::find($id);
+        if (!$about) {
             return response()->json([
                 'status' => false,
                 'message' => 'About not found',
@@ -95,46 +93,46 @@ class AboutController extends Controller
         }
 
         if ($image1 = $request->file('background_image')) {
-            if ($index->background_image && file_exists(public_path('About') . '/' . $index->background_image)) {
-                unlink(public_path('About') . '/' . $index->background_image);
+            if ($about->background_image && file_exists(public_path('About') . '/' . $about->background_image)) {
+                unlink(public_path('About') . '/' . $about->background_image);
             }
 
             $imageName1 = time() . '-' . uniqid() . '.' . $image1->getClientOriginalExtension();
             $image1->move(public_path('About'), $imageName1);
 
-            $index->update([
+            $about->update([
                 'background_image' => $imageName1,
             ]);
         }
 
         if ($image2 = $request->file('image')) {
-            if ($index->image && file_exists(public_path('About') . '/' . $index->image)) {
-                unlink(public_path('About') . '/' . $index->image);
+            if ($about->image && file_exists(public_path('About') . '/' . $about->image)) {
+                unlink(public_path('About') . '/' . $about->image);
             }
 
             $imageName2 = time() . '-' . uniqid() . '.' . $image2->getClientOriginalExtension();
             $image2->move(public_path('About'), $imageName2);
 
-            $index->update([
+            $about->update([
                 'image' => $imageName2,
             ]);
         }
 
-        $index->update([
+        $about->update([
             'header_title' => $request->header_title,
             'question' => $request->question,
             'description' => $request->description,
             'button_text' => $request->button_text,
             'button_link' => $request->button_link,
-            'isActive' => $request->isActive
+            'is_active' => $request->is_active
         ]);
 
         $all_data = [
-            'question' => $index->question,
-            'description'=>$index->description,
-            'button_text' => $index->button_text,
-            'button_link'=>$index->button_link,
-            'isActive' => $index->isActive
+            'question' => $about->question,
+            'description' => $about->description,
+            'button_text' => $about->button_text,
+            'button_link' => $about->button_link,
+            'is_active' => $about->is_active
         ];
 
         $data = [
@@ -146,16 +144,51 @@ class AboutController extends Controller
         return response()->json($data);
     }
 
-    public function aboutDetails(){
-        $pro = About::where('isActive', true)->first();
+    public function aboutDetails()
+    {
+        $about = About::where('is_active', true)->first();
 
-        $data = [
-            'status' => true,
-            'message' => 'Here about details',
-            'title' => $pro->title->name,
-            'data' => $pro,
+        if ($about) {
+            $data = [
+                'status' => true,
+                'message' => 'Here about details',
+                'title' => $about->title->name,
+                'data' => $about,
 
-        ];
-        return response()->json($data, 200);
+            ];
+            return response()->json($data, 200);
+        } else {
+            $data = [
+                'status' => false,
+                'message' => 'Data is none.',
+                'data' => $about,
+
+            ];
+            return response()->json($data, 404);
+        }
+    }
+
+    public function aboutInformation()
+    {
+        $about = About::first();
+
+        if ($about) {
+            $data = [
+                'status' => true,
+                'message' => 'Here about details',
+                'title' => $about->title->name,
+                'data' => $about,
+
+            ];
+            return response()->json($data, 200);
+        } else {
+            $data = [
+                'status' => false,
+                'message' => 'Data is not active.',
+                'data' => $about,
+
+            ];
+            return response()->json($data, 404);
+        }
     }
 }

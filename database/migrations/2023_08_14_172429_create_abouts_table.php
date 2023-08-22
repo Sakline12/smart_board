@@ -18,12 +18,12 @@ class CreateAboutsTable extends Migration
             $table->bigInteger('header_title')->unsigned();
             $table->foreign('header_title')->references('id')->on('titles')->onDelete('cascade');
             $table->string('background_image');
-            $table->string('question');
+            $table->text('question');
             $table->text('description');
             $table->string('image');
             $table->string('button_text');
             $table->string('button_link');
-            $table->boolean('isActive')->default(true)->nullable();
+            $table->boolean('is_active')->default(true)->nullable();
             $table->timestamps();
         });
     }

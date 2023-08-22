@@ -12,7 +12,7 @@ class ContactIntroduction extends Model
     protected $fillable=[
       'title_id',
       'background_image',
-      'isActive'
+      'is_active'
     ];
 
     

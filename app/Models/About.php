@@ -17,7 +17,7 @@ class About extends Model
       'image',
       'button_text',
       'button_link',
-      'isActive'
+      'is_active'
     ];
 
     

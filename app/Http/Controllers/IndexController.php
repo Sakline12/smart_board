@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\CaseStudy;
+use App\Models\CompleteSolutionProvider;
 use App\Models\Conference;
 use App\Models\Csp;
 use App\Models\Education;
@@ -22,16 +23,13 @@ class IndexController extends Controller
     //Slider
     public function createIndexSlider(Request $request)
     {
-        $rules = array(
+        $validator = Validator::make($request->all(), [
             'image' => 'required',
             'title' => 'required',
             'content' =>  'required',
             'button_text' => 'required',
             'button_link' => 'required',
-        );
-
-
-        $validator = Validator::make($request->all(), $rules);
+        ]);
 
         if ($validator->fails()) {
             return response()->json([
@@ -40,6 +38,7 @@ class IndexController extends Controller
                 'errors' => $validator->errors()
             ], 403);
         }
+
 
         $index = new IndexSlider();
         if ($image = $request->file('image')) {
@@ -72,13 +71,22 @@ class IndexController extends Controller
 
     public function listOfIndexSlider()
     {
-        $index = IndexSlider::where('isActive', true)->get();
-        $data = [
-            'status' => true,
-            'message' => 'Here are your index items',
-            'data' => $index
-        ];
-        return response()->json($data, 200);
+        $index = IndexSlider::where('is_active', true)->get();
+        if ($index) {
+            $data = [
+                'status' => true,
+                'message' => 'Here are your index items',
+                'data' => $index
+            ];
+            return response()->json($data, 200);
+        } else {
+            $data = [
+                'status' => false,
+                'message' => 'Data is not active',
+                'data' => []
+            ];
+            return response()->json($data, 404);
+        }
     }
 
     public function deleteIndexSlider(Request $request, $id)
@@ -129,7 +137,7 @@ class IndexController extends Controller
             'content' => $request->content,
             'button_text' => $request->button_text,
             'button_link' => $request->button_link,
-            'isActive' => $request->isActive,
+            'is_active' => $request->is_active,
         ]);
 
         $all_data = [
@@ -137,7 +145,7 @@ class IndexController extends Controller
             'title' => $index->title,
             'content' => $index->content,
             'button_text' => $index->button_text,
-            'isActive' => $index->isActive,
+            'is_active' => $index->is_active,
         ];
 
         $data = [
@@ -151,26 +159,23 @@ class IndexController extends Controller
 
     public function sliderItemList()
     {
-        $index = IndexSlider::all();
-
+        $index = IndexSlider::get();
         $data = [
             'status' => true,
-            'message' => "Here are all index slider:",
+            'message' => 'Here are your index items',
             'data' => $index
         ];
-        return response()->json($data);
+        return response()->json($data, 200);
     }
 
     //Product
     public function createProduct(Request $request)
     {
-        $rules = array(
+        $validator = Validator::make($request->all(), [
             'title_id' => 'required',
             'product_image' =>  'required',
             'background_img' => 'required',
-        );
-
-        $validator = Validator::make($request->all(), $rules);
+        ]);
 
         if ($validator->fails()) {
             return response()->json([
@@ -222,17 +227,25 @@ class IndexController extends Controller
         }
     }
 
-
     public function allProduct()
     {
-        $index = Product::where('isActive', true)->first();
-        $data = [
-            'status' => true,
-            'message' => 'Here are your product items',
-            'title'=>$index->title->name,
-            'data' => $index
-        ];
-        return response()->json($data, 200);
+        $index = Product::where('is_active', true)->first();
+        if ($index) {
+            $data = [
+                'status' => true,
+                'message' => 'Here are your product items',
+                'title' => $index->title->name,
+                'data' => $index
+            ];
+            return response()->json($data, 200);
+        } else {
+            $data = [
+                'status' => false,
+                'message' => 'Data is not active',
+                'data' => []
+            ];
+            return response()->json($data, 404);
+        }
     }
 
     public function deleteProduct(Request $request, $id)
@@ -292,7 +305,8 @@ class IndexController extends Controller
         }
 
         $index->update([
-            'title_id' => $request->title_id
+            'title_id' => $request->title_id,
+            'is_active' => $request->is_active
         ]);
 
         $all_data = [
@@ -315,7 +329,7 @@ class IndexController extends Controller
         $data = [
             'status' => true,
             'message' => "Here are product:",
-            'title'=>$index->title->name,
+            'title' => $index->title->name,
             'data' => $index
         ];
         return response()->json($data);
@@ -388,14 +402,23 @@ class IndexController extends Controller
 
     public function allPanel()
     {
-        $index = Panel::where('isActive', true)->first();
-        $data = [
-            'status' => true,
-            'message' => 'Here are your index items',
-            'title'=>$index->title->name,
-            'data' => $index
-        ];
-        return response()->json($data, 200);
+        $index = Panel::where('is_active', true)->first();
+        if ($index) {
+            $data = [
+                'status' => true,
+                'message' => 'Here are your index items',
+                'title' => $index->title->name,
+                'data' => $index
+            ];
+            return response()->json($data, 200);
+        } else {
+            $data = [
+                'status' => false,
+                'message' => 'Data is not active',
+                'data' => []
+            ];
+            return response()->json($data, 404);
+        }
     }
 
     public function updatePanel(Request $request, $id)
@@ -424,13 +447,13 @@ class IndexController extends Controller
         $index->update([
             'title_id' => $request->title_id,
             'description' => $request->description,
-            'isActive' => $request->isActive
+            'is_active' => $request->is_active
         ]);
 
         $data = [
             'title_id' => $index->title_id,
             'description' => $index->description,
-            'isActive' => $index->isActive,
+            'is_active' => $index->is_active,
         ];
 
         $data = [
@@ -442,7 +465,18 @@ class IndexController extends Controller
         return response()->json($data);
     }
 
-    //csp
+    public function panelList()
+    {
+        $panel = Panel::first();
+        $data = [
+            'status' => true,
+            'message' => "Here are all panel items:",
+            'data' => $panel
+        ];
+        return response()->json($data);
+    }
+
+    //Complete Solution Provider
     public function createCompleteSolutionProvider(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -476,20 +510,20 @@ class IndexController extends Controller
             $image->move(public_path('csp'), $imageName);
         }
 
-        $csp = new CSP();
-        $csp->title_id = $request->title_id;
-        $csp->image = $imageName;
-        $csp->subtitle = $request->subtitle;
-        $csp->description = $request->description;
-        $csp->button_text = $request->button_text;
-        $csp->button_link = $request->button_link;
-        $csp->save();
+        $completesolutionprovider = new CompleteSolutionProvider();
+        $completesolutionprovider->title_id = $request->title_id;
+        $completesolutionprovider->image = $imageName;
+        $completesolutionprovider->subtitle = $request->subtitle;
+        $completesolutionprovider->description = $request->description;
+        $completesolutionprovider->button_text = $request->button_text;
+        $completesolutionprovider->button_link = $request->button_link;
+        $completesolutionprovider->save();
 
-        if ($csp) {
+        if ($completesolutionprovider) {
             $data = [
                 'status' => true,
-                'message' => 'CSP successfully created',
-                'data' => $csp,
+                'message' => 'CompleteSolutionProvider successfully created',
+                'data' => $completesolutionprovider,
             ];
             return response()->json($data, 201);
         } else {
@@ -497,38 +531,68 @@ class IndexController extends Controller
                 'status' => false,
                 'message' => 'Error occurred',
                 'data' => [
-                    'title_name' => $csp->title->title_id,
+                    'title_name' => $completesolutionprovider->title->title_id,
                 ],
             ];
             return response()->json($data, 500);
         }
     }
 
-    public function detailsCompleteSolutionProvider()
+    public function infoCompleteSolutionProvider()
     {
-        $csps = Csp::where('isActive', true)
+        $completesolutionproviders = CompleteSolutionProvider::where('is_active', true)
             ->select(['title_id', 'image', 'subtitle', 'description', 'button_text', 'button_link'])
             ->get();
 
-        $formattedCsps = [];
+        $formattedcompletesolutionproviders = [];
 
-        foreach ($csps as $csp) {
-            $formattedCsps[] = [
-                'image' => $csp->image,
-                'subtitle' => $csp->subtitle,
-                'description' => $csp->description,
-                'button_text' => $csp->button_text,
-                'button_link' => $csp->button_link,
+        foreach ($completesolutionproviders as $completesolutionprovider) {
+            $formattedcompletesolutionproviders[] = [
+                'image' => $completesolutionprovider->image,
+                'subtitle' => $completesolutionprovider->subtitle,
+                'description' => $completesolutionprovider->description,
+                'button_text' => $completesolutionprovider->button_text,
+                'button_link' => $completesolutionprovider->button_link,
             ];
         }
 
-        $firstCspTitle = $csps->first()->title->name;
+        $firstcompletesolutionproviderTitle = $completesolutionproviders->first()->title->name;
 
         $data = [
             'status' => true,
-            'message' => 'Here are your csp items',
-            'title' => $firstCspTitle,
-            'data' => $formattedCsps
+            'message' => 'Here are your completesolutionprovider items',
+            'title' => $firstcompletesolutionproviderTitle,
+            'data' => $formattedcompletesolutionproviders
+        ];
+
+        return response()->json($data, 200);
+    }
+
+    public function detailsCompleteSolutionProvider()
+    {
+        $completesolutionproviders = CompleteSolutionProvider::select(['title_id', 'image', 'subtitle', 'description', 'button_text', 'button_link', 'is_active'])
+            ->get();
+
+        $formattedcompletesolutionproviders = [];
+
+        foreach ($completesolutionproviders as $completesolutionprovider) {
+            $formattedcompletesolutionproviders[] = [
+                'image' => $completesolutionprovider->image,
+                'subtitle' => $completesolutionprovider->subtitle,
+                'description' => $completesolutionprovider->description,
+                'button_text' => $completesolutionprovider->button_text,
+                'button_link' => $completesolutionprovider->button_link,
+                'is_active' => $completesolutionprovider->is_active,
+            ];
+        }
+
+        $firstcompletesolutionproviderTitle = $completesolutionproviders->first()->title->name;
+
+        $data = [
+            'status' => true,
+            'message' => 'Here are your completesolutionprovider items',
+            'title' => $firstcompletesolutionproviderTitle,
+            'data' => $formattedcompletesolutionproviders
         ];
 
         return response()->json($data, 200);
@@ -536,8 +600,8 @@ class IndexController extends Controller
 
     public function updateCompleteSolutionProvider(Request $request, $id)
     {
-        $index = CSP::find($id);
-        if (!$index) {
+        $completesolutionprovider = CompleteSolutionProvider::find($id);
+        if (!$completesolutionprovider) {
             return response()->json([
                 'status' => false,
                 'message' => 'CSP items not found',
@@ -545,39 +609,39 @@ class IndexController extends Controller
         }
 
         if ($image1 = $request->file('image')) {
-            if ($index->image && file_exists(public_path('csp') . '/' . $index->image)) {
-                unlink(public_path('csp') . '/' . $index->image);
+            if ($completesolutionprovider->image && file_exists(public_path('csp') . '/' . $completesolutionprovider->image)) {
+                unlink(public_path('csp') . '/' . $completesolutionprovider->image);
             }
 
             $imageName1 = time() . '-' . uniqid() . '.' . $image1->getClientOriginalExtension();
             $image1->move(public_path('csp'), $imageName1);
 
-            $index->update([
+            $completesolutionprovider->update([
                 'image' => $imageName1,
             ]);
         }
-        $index->update([
+        $completesolutionprovider->update([
             'title' => $request->title,
             'subtitle' => $request->subtitle,
             'description' => $request->description,
             'button_link' => $request->button_link,
             'button_text' => $request->button_text,
-            'isActive' => $request->isActive
+            'is_active' => $request->is_active
         ]);
 
         $all_data = [
-            'subtitle' => $index->subtitle,
-            'image' => $index->image,
-            'description' => $index->description,
-            'button_link' => $index->button_link,
-            'button_text' => $index->button_text,
-            'isActive' => $index->isActive
+            'subtitle' => $completesolutionprovider->subtitle,
+            'image' => $completesolutionprovider->image,
+            'description' => $completesolutionprovider->description,
+            'button_link' => $completesolutionprovider->button_link,
+            'button_text' => $completesolutionprovider->button_text,
+            'is_active' => $completesolutionprovider->is_active
         ];
 
         $data = [
             'status' => 200,
             'message' => "Product updated successfully",
-            'title' => $index->title->name,
+            'title' => $completesolutionprovider->title->name,
             'data' => $all_data,
         ];
 
@@ -586,11 +650,11 @@ class IndexController extends Controller
 
     public function deleteCompleteSolutionProvider(Request $request, $id)
     {
-        $index = Csp::where('id', $id)->delete();
+        $index = CompleteSolutionProvider::where('id', $id)->delete();
         if ($index) {
             $data = [
                 'status' => true,
-                'message' => 'Delete this Csp successfully',
+                'message' => 'Delete this complete solution provider successfully',
                 'data' => $index
             ];
             return response()->json($data);
@@ -604,10 +668,10 @@ class IndexController extends Controller
         }
     }
 
-    //Edu
+    //Education
     public function createEducation(Request $request)
     {
-        $rules = array(
+        $validator = Validator::make($request->all(), [
             'header_title' => 'required',
             'heading_description' => 'required',
             'image' => 'required',
@@ -615,9 +679,7 @@ class IndexController extends Controller
             'description' => 'required',
             'button_text' => 'required',
             'button_link' => 'required',
-        );
-
-        $validator = Validator::make($request->all(), $rules);
+        ]);
 
         if ($validator->fails()) {
             return response()->json([
@@ -644,26 +706,26 @@ class IndexController extends Controller
             ], 409);
         }
 
-        $index = new Education();
+        $education = new Education();
         if ($panelimage = $request->file('image')) {
             $imageName1 = time() . '-' . uniqid() . '.' . $panelimage->getClientOriginalExtension();
             $panelimage->move(public_path('edu'), $imageName1);
         }
 
-        $index->header_title = $request->input('header_title');
-        $index->heading_description = $request->input('heading_description');
-        $index->image = $imageName1;
-        $index->title = $request->input('title');
-        $index->description = $request->input('description');
-        $index->button_text = $request->input('button_text');
-        $index->button_link = $request->input('button_link');
-        $index->save();
+        $education->header_title = $request->input('header_title');
+        $education->heading_description = $request->input('heading_description');
+        $education->image = $imageName1;
+        $education->title = $request->input('title');
+        $education->description = $request->input('description');
+        $education->button_text = $request->input('button_text');
+        $education->button_link = $request->input('button_link');
+        $education->save();
 
-        if ($index->save()) {
+        if ($education->save()) {
             $data = [
                 'status' => true,
                 'message' => 'Edu successfully created',
-                'data' => $index,
+                'data' => $education,
             ];
             return response()->json($data, 201);
         } else {
@@ -678,8 +740,8 @@ class IndexController extends Controller
 
     public function updateEducation(Request $request, $id)
     {
-        $index = Education::find($id);
-        if (!$index) {
+        $education = Education::find($id);
+        if (!$education) {
             return response()->json([
                 'status' => false,
                 'message' => 'Edu items not found',
@@ -687,36 +749,36 @@ class IndexController extends Controller
         }
 
         if ($image1 = $request->file('image')) {
-            if ($index->image && file_exists(public_path('edu') . '/' . $index->image)) {
-                unlink(public_path('edu') . '/' . $index->image);
+            if ($education->image && file_exists(public_path('edu') . '/' . $education->image)) {
+                unlink(public_path('edu') . '/' . $education->image);
             }
 
             $imageName1 = time() . '-' . uniqid() . '.' . $image1->getClientOriginalExtension();
             $image1->move(public_path('edu'), $imageName1);
 
-            $index->update([
+            $education->update([
                 'image' => $imageName1,
             ]);
         }
-        $index->update([
+        $education->update([
             'header_title' => $request->header_title,
             'heading_description' => $request->heading_description,
             'title' => $request->title,
             'description' => $request->description,
             'button_link' => $request->button_link,
             'button_text' => $request->button_text,
-            'isActive' => $request->isActive
+            'is_active' => $request->is_active
         ]);
 
         $all_data = [
-            'header_title' => $index->title,
-            'heading_description' => $index->heading_description,
-            'image' => $index->image,
-            'title' => $index->title,
-            'description' => $index->description,
-            'button_link' => $index->button_link,
-            'button_text' => $index->button_text,
-            'isActive' => $index->isActive
+            'header_title' => $education->title,
+            'heading_description' => $education->heading_description,
+            'image' => $education->image,
+            'title' => $education->title,
+            'description' => $education->description,
+            'button_link' => $education->button_link,
+            'button_text' => $education->button_text,
+            'is_active' => $education->is_active
         ];
 
         $data = [
@@ -728,23 +790,53 @@ class IndexController extends Controller
         return response()->json($data);
     }
 
-    public function showEducation()
+    public function educationDetails()
     {
-        $index = Education::where('isActive', true)->first();
-
-        $data = [
-            'status' => true,
-            'message' => 'Here are your Edu items',
-            'header_title' => $index->title,
-            'data' => $index,
-        ];
-        return response()->json($data, 200);
+        $index = Education::where('is_active', true)->first();
+        if ($index) {
+            $data = [
+                'status' => true,
+                'message' => 'Here are your Edu items',
+                'header_title' => $index->title,
+                'data' => $index,
+            ];
+            return response()->json($data, 200);
+        } else {
+            $data = [
+                'status' => false,
+                'message' => 'Data is not active',
+                'data' => $index,
+            ];
+            return response()->json($data, 404);
+        }
     }
 
-    //Feature products
-    public function CreateFeatureProduct(Request $request)
+    public function educationInfo()
     {
-        $rules = array(
+        $index = Education::first();
+        if ($index) {
+            $data = [
+                'status' => true,
+                'message' => 'Here are your Education items',
+                'header_title' => $index->title,
+                'data' => $index,
+            ];
+            return response()->json($data, 200);
+        } else {
+            $data = [
+                'status' => false,
+                'message' => 'Data is not active',
+                'data' => [],
+            ];
+            return response()->json($data, 404);
+        }
+    }
+
+
+    //Feature products
+    public function createFeatureProduct(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
             'title_id' => 'required',
             'description' => 'required',
             'master_image' => 'required',
@@ -753,9 +845,7 @@ class IndexController extends Controller
             'caption' => 'required',
             'button_text' => 'required',
             'button_link' => 'required',
-        );
-
-        $validator = Validator::make($request->all(), $rules);
+        ]);
 
         if ($validator->fails()) {
             return response()->json([
@@ -782,7 +872,7 @@ class IndexController extends Controller
             ], 409);
         }
 
-        $index = new FeatureProduct();
+        $feature = new FeatureProduct();
         if ($panelimage = $request->file('master_image')) {
             $imageName1 = time() . '-' . uniqid() . '.' . $panelimage->getClientOriginalExtension();
             $panelimage->move(public_path('featureProduct'), $imageName1);
@@ -798,21 +888,21 @@ class IndexController extends Controller
             $panelimage2->move(public_path('featureProduct'), $imageName3);
         }
 
-        $index->title_id = $request->title_id;
-        $index->description = $request->description;
-        $index->master_image = $imageName1;
-        $index->left_image = $imageName2;
-        $index->right_image = $imageName3;
-        $index->caption = $request->caption;
-        $index->button_text = $request->button_text;
-        $index->button_link = $request->button_link;
-        $index->save();
+        $feature->title_id = $request->title_id;
+        $feature->description = $request->description;
+        $feature->master_image = $imageName1;
+        $feature->left_image = $imageName2;
+        $feature->right_image = $imageName3;
+        $feature->caption = $request->caption;
+        $feature->button_text = $request->button_text;
+        $feature->button_link = $request->button_link;
+        $feature->save();
 
-        if ($index->save()) {
+        if ($feature->save()) {
             $data = [
                 'status' => true,
                 'message' => 'Feature products successfully created',
-                'data' => $index,
+                'data' => $feature,
             ];
             return response()->json($data, 201);
         } else {
@@ -825,10 +915,10 @@ class IndexController extends Controller
         }
     }
 
-    public function UpdateFeatureProduct(Request $request, $id)
+    public function updateFeatureProduct(Request $request, $id)
     {
-        $index = FeatureProduct::find($id);
-        if (!$index) {
+        $feature = FeatureProduct::find($id);
+        if (!$feature) {
             return response()->json([
                 'status' => false,
                 'message' => 'Feature product not found',
@@ -836,97 +926,118 @@ class IndexController extends Controller
         }
 
         if ($image1 = $request->file('master_image')) {
-            if ($index->master_image && file_exists(public_path('featureProduct') . '/' . $index->master_image)) {
-                unlink(public_path('featureProduct') . '/' . $index->master_image);
+            if ($feature->master_image && file_exists(public_path('featureProduct') . '/' . $feature->master_image)) {
+                unlink(public_path('featureProduct') . '/' . $feature->master_image);
             }
 
             $imageName1 = time() . '-' . uniqid() . '.' . $image1->getClientOriginalExtension();
             $image1->move(public_path('featureProduct'), $imageName1);
 
-            $index->update([
+            $feature->update([
                 'master_image' => $imageName1,
             ]);
         }
 
         if ($image2 = $request->file('left_image')) {
-            if ($index->left_image && file_exists(public_path('featureProduct') . '/' . $index->left_image)) {
-                unlink(public_path('featureProduct') . '/' . $index->left_image);
+            if ($feature->left_image && file_exists(public_path('featureProduct') . '/' . $feature->left_image)) {
+                unlink(public_path('featureProduct') . '/' . $feature->left_image);
             }
 
             $imageName2 = time() . '-' . uniqid() . '.' . $image2->getClientOriginalExtension();
             $image2->move(public_path('featureProduct'), $imageName2);
 
-            $index->update([
+            $feature->update([
                 'left_image' => $imageName2,
             ]);
         }
 
         if ($image3 = $request->file('right_image')) {
-            if ($index->right_image && file_exists(public_path('featureProduct') . '/' . $index->right_image)) {
-                unlink(public_path('featureProduct') . '/' . $index->right_image);
+            if ($feature->right_image && file_exists(public_path('featureProduct') . '/' . $feature->right_image)) {
+                unlink(public_path('featureProduct') . '/' . $feature->right_image);
             }
 
             $imageName3 = time() . '-' . uniqid() . '.' . $image3->getClientOriginalExtension();
             $image3->move(public_path('featureProduct'), $imageName3);
 
-            $index->update([
+            $feature->update([
                 'right_image' => $imageName3,
             ]);
         }
 
-        $index->update([
+        $feature->update([
             'title_id' => $request->title_id,
             'description' => $request->description,
             'caption' => $request->caption,
             'button_link' => $request->button_link,
             'button_text' => $request->button_text,
-            'isActive' => $request->isActive
+            'is_active' => $request->is_active
         ]);
 
         $all_data = [
-            'description' => $index->description,
-            'button_link' => $index->button_link,
-            'button_text' => $index->button_text,
-            'isActive' => $index->isActive
+            'description' => $feature->description,
+            'button_link' => $feature->button_link,
+            'button_text' => $feature->button_text,
+            'is_active' => $feature->is_active
         ];
 
         $data = [
             'status' => 200,
             'message' => "Feature product updated successfully",
-            'title' => $index->title->name,
+            'title' => $feature->title->name,
             'data' => $all_data,
         ];
 
         return response()->json($data);
     }
 
-    public function FeatureProductDetails()
+    public function featureProductDetails()
     {
-        $pro = FeatureProduct::where('isActive', true)->first();
-
+        $feature = FeatureProduct::first();
         $data = [
             'status' => true,
             'message' => 'Here feature product details',
-            'title_id' => $pro->title->name,
-            'data' => $pro,
+            'title_id' => $feature->title->name,
+            'data' => $feature,
 
         ];
         return response()->json($data, 200);
     }
 
+    public function featureInfo()
+    {
+        $feature = FeatureProduct::where('is_active', true)->first();
+
+        if ($feature) {
+            $data = [
+                'status' => true,
+                'message' => 'Here feature product details',
+                'title_id' => $feature->title->name,
+                'data' => $feature,
+
+            ];
+            return response()->json($data, 200);
+        } else {
+            $data = [
+                'status' => false,
+                'message' => 'Data is not active',
+                'data' => [],
+            ];
+            return response()->json($data, 404);
+        }
+    }
+
     //Confirences
     public function CreateConference(Request $request)
     {
-        $rules = array(
+
+        $validator = Validator::make($request->all(), [
             'title_id' => 'required',
             'master_image' => 'required',
             'sub_image1' => 'required',
             'sub_image2' => 'required',
             'sub_image3' => 'required',
             'sub_image4' => 'required',
-        );
-
-        $validator = Validator::make($request->all(), $rules);
+        ]);
 
         if ($validator->fails()) {
             return response()->json([
@@ -953,7 +1064,7 @@ class IndexController extends Controller
             ], 409);
         }
 
-        $index = new Conference();
+        $conference = new Conference();
         if ($panelimage = $request->file('master_image')) {
             $imageName1 = time() . '-' . uniqid() . '.' . $panelimage->getClientOriginalExtension();
             $panelimage->move(public_path('conference'), $imageName1);
@@ -979,19 +1090,19 @@ class IndexController extends Controller
             $panelimage4->move(public_path('conference'), $imageName5);
         }
 
-        $index->title_id = $request->title_id;
-        $index->master_image = $imageName1;
-        $index->sub_image1 = $imageName2;
-        $index->sub_image2 = $imageName3;
-        $index->sub_image3 = $imageName4;
-        $index->sub_image4 = $imageName5;
-        $index->save();
+        $conference->title_id = $request->title_id;
+        $conference->master_image = $imageName1;
+        $conference->sub_image1 = $imageName2;
+        $conference->sub_image2 = $imageName3;
+        $conference->sub_image3 = $imageName4;
+        $conference->sub_image4 = $imageName5;
+        $conference->save();
 
-        if ($index->save()) {
+        if ($conference->save()) {
             $data = [
                 'status' => true,
                 'message' => 'Conference successfully created',
-                'data' => $index,
+                'data' => $conference,
             ];
             return response()->json($data, 201);
         } else {
@@ -1006,8 +1117,8 @@ class IndexController extends Controller
 
     public function UpdateConference(Request $request, $id)
     {
-        $index = Conference::find($id);
-        if (!$index) {
+        $conference = Conference::find($id);
+        if (!$conference) {
             return response()->json([
                 'status' => false,
                 'message' => 'Conference not found',
@@ -1015,84 +1126,84 @@ class IndexController extends Controller
         }
 
         if ($image1 = $request->file('master_image')) {
-            if ($index->master_image && file_exists(public_path('conference') . '/' . $index->master_image)) {
-                unlink(public_path('conference') . '/' . $index->master_image);
+            if ($conference->master_image && file_exists(public_path('conference') . '/' . $conference->master_image)) {
+                unlink(public_path('conference') . '/' . $conference->master_image);
             }
 
             $imageName1 = time() . '-' . uniqid() . '.' . $image1->getClientOriginalExtension();
             $image1->move(public_path('conference'), $imageName1);
 
-            $index->update([
+            $conference->update([
                 'master_image' => $imageName1,
             ]);
         }
 
         if ($image2 = $request->file('sub_image1')) {
-            if ($index->sub_image1 && file_exists(public_path('conference') . '/' . $index->sub_image1)) {
-                unlink(public_path('conference') . '/' . $index->sub_image1);
+            if ($conference->sub_image1 && file_exists(public_path('conference') . '/' . $conference->sub_image1)) {
+                unlink(public_path('conference') . '/' . $conference->sub_image1);
             }
 
             $imageName2 = time() . '-' . uniqid() . '.' . $image2->getClientOriginalExtension();
             $image2->move(public_path('conference'), $imageName2);
 
-            $index->update([
+            $conference->update([
                 'sub_image1' => $imageName2,
             ]);
         }
 
         if ($image3 = $request->file('sub_image2')) {
-            if ($index->sub_image2 && file_exists(public_path('conference') . '/' . $index->sub_image2)) {
-                unlink(public_path('conference') . '/' . $index->sub_image2);
+            if ($conference->sub_image2 && file_exists(public_path('conference') . '/' . $conference->sub_image2)) {
+                unlink(public_path('conference') . '/' . $conference->sub_image2);
             }
 
             $imageName3 = time() . '-' . uniqid() . '.' . $image3->getClientOriginalExtension();
             $image3->move(public_path('conference'), $imageName3);
 
-            $index->update([
+            $conference->update([
                 'sub_image2' => $imageName3,
             ]);
         }
 
         if ($image4 = $request->file('sub_image3')) {
-            if ($index->sub_image3 && file_exists(public_path('conference') . '/' . $index->sub_image3)) {
-                unlink(public_path('conference') . '/' . $index->sub_image3);
+            if ($conference->sub_image3 && file_exists(public_path('conference') . '/' . $conference->sub_image3)) {
+                unlink(public_path('conference') . '/' . $conference->sub_image3);
             }
 
             $imageName4 = time() . '-' . uniqid() . '.' . $image4->getClientOriginalExtension();
             $image4->move(public_path('conference'), $imageName4);
 
-            $index->update([
+            $conference->update([
                 'sub_image3' => $imageName4,
             ]);
         }
 
         if ($image5 = $request->file('sub_image4')) {
-            if ($index->sub_image4 && file_exists(public_path('conference') . '/' . $index->sub_image4)) {
-                unlink(public_path('conference') . '/' . $index->sub_image4);
+            if ($conference->sub_image4 && file_exists(public_path('conference') . '/' . $conference->sub_image4)) {
+                unlink(public_path('conference') . '/' . $conference->sub_image4);
             }
 
             $imageName5 = time() . '-' . uniqid() . '.' . $image5->getClientOriginalExtension();
             $image5->move(public_path('conference'), $imageName5);
 
-            $index->update([
+            $conference->update([
                 'sub_image4' => $imageName5,
             ]);
         }
 
-        $index->update([
+        $conference->update([
             'title_id' => $request->title_id,
-            'isActive' => $request->isActive
+            'is_active' => $request->is_active
         ]);
 
         $all_data = [
-            'title_id' => $index->title_id,
-            'isActive' => $index->isActive
+            'title_id' => $conference->title_id,
+            'is_active' => $conference->is_active
         ];
 
         $data = [
             'status' => 200,
             'message' => "Conference updated successfully",
-            'title' => $index->title->name,
+            'title' => $conference->title->name,
             'data' => $all_data,
         ];
 
@@ -1101,28 +1212,51 @@ class IndexController extends Controller
 
     public function ConferenceDetails()
     {
-        $pro = Conference::where('isActive', true)->first();
+        $conference = Conference::where('is_active', true)->first();
+        if ($conference) {
+            $data = [
+                'status' => true,
+                'message' => 'Here feature product details',
+                'title_id' => $conference->title->name,
+                'data' => $conference,
+
+            ];
+            return response()->json($data, 200);
+        } else {
+            $data = [
+                'status' => False,
+                'message' => 'Data is not active',
+                'data' => [],
+
+            ];
+            return response()->json($data, 404);
+        }
+    }
+
+    public function conferenceInfo()
+    {
+        $conference = Conference::first();
 
         $data = [
             'status' => true,
             'message' => 'Here feature product details',
-            'title_id' => $pro->title->name,
-            'data' => $pro,
+            'title_id' => $conference->title->name,
+            'data' => $conference,
 
         ];
         return response()->json($data, 200);
     }
 
+
     //Honorable Clent
     public function createHonorableClient(Request $request)
     {
-        $rules = array(
+
+        $validator = Validator::make($request->all(), [
             'title_id' => 'required',
             'image' => 'required',
             'link' => 'required',
-        );
-
-        $validator = Validator::make($request->all(), $rules);
+        ]);
 
         if ($validator->fails()) {
             return response()->json([
@@ -1139,24 +1273,24 @@ class IndexController extends Controller
                 'data' => [],
             ], 400);
         }
-        $index = new HonorableClient();
+        $client = new HonorableClient();
         if ($panelimage = $request->file('image')) {
             $imageName1 = time() . '-' . uniqid() . '.' . $panelimage->getClientOriginalExtension();
             $panelimage->move(public_path('honorable_client'), $imageName1);
         }
 
-        $index->title_id = $request->title_id;
-        $index->description = $request->description;
-        $index->image = $imageName1;
-        $index->link = $request->link;
+        $client->title_id = $request->title_id;
+        $client->description = $request->description;
+        $client->image = $imageName1;
+        $client->link = $request->link;
 
-        $index->save();
+        $client->save();
 
-        if ($index->save()) {
+        if ($client->save()) {
             $data = [
                 'status' => true,
                 'message' => 'Honorable client successfully created',
-                'data' => $index,
+                'data' => $client,
             ];
             return response()->json($data, 201);
         } else {
@@ -1171,8 +1305,8 @@ class IndexController extends Controller
 
     public function updateHonorableClient(Request $request, $id)
     {
-        $index = HonorableClient::find($id);
-        if (!$index) {
+        $client = HonorableClient::find($id);
+        if (!$client) {
             return response()->json([
                 'status' => false,
                 'message' => 'Client id not found',
@@ -1180,35 +1314,35 @@ class IndexController extends Controller
         }
 
         if ($image1 = $request->file('image')) {
-            if ($index->image && file_exists(public_path('honorable_client') . '/' . $index->image)) {
-                unlink(public_path('honorable_client') . '/' . $index->image);
+            if ($client->image && file_exists(public_path('honorable_client') . '/' . $client->image)) {
+                unlink(public_path('honorable_client') . '/' . $client->image);
             }
 
             $imageName1 = time() . '-' . uniqid() . '.' . $image1->getClientOriginalExtension();
             $image1->move(public_path('honorable_client'), $imageName1);
 
-            $index->update([
+            $client->update([
                 'image' => $imageName1,
             ]);
         }
-        $index->update([
+        $client->update([
             'title_id' => $request->title_id,
             'description' => $request->description,
             'link' => $request->link,
-            'isActive' => $request->isActive
+            'is_active' => $request->is_active
         ]);
 
         $all_data = [
-            'image' => $index->image,
-            'description' => $index->description,
-            'link' => $index->button_link,
-            'isActive' => $index->isActive
+            'image' => $client->image,
+            'description' => $client->description,
+            'link' => $client->button_link,
+            'is_active' => $client->is_active
         ];
 
         $data = [
             'status' => 200,
             'message' => "Client updated successfully",
-            'title' => $index->title->name,
+            'title' => $client->title->name,
             'data' => $all_data,
         ];
 
@@ -1217,30 +1351,60 @@ class IndexController extends Controller
 
     public function honorableClientDetails()
     {
-        $csps = HonorableClient::where('isActive', true)
-            ->select(['title_id', 'image', 'description', 'link', 'isActive'])
+        $clients = HonorableClient::where('is_active', true)
+            ->select(['title_id', 'image', 'description', 'link', 'is_active'])
             ->get();
 
-        $formattedCsps = [];
+        $formattedclients = [];
 
-        foreach ($csps as $csp) {
-            $formattedCsps[] = [
-                'title_id' => $csp->title_id,
-                'image' => $csp->image,
-                'description' => $csp->description,
-                'link' => $csp->link,
-                'isActive' => $csp->isActive
+        foreach ($clients as $client) {
+            $formattedclients[] = [
+                'title_id' => $client->title_id,
+                'image' => $client->image,
+                'description' => $client->description,
+                'link' => $client->link,
+                'is_active' => $client->is_active
 
             ];
         }
 
-        $firstCspTitle = $csps->first()->title->name;
+        $firstclientTitle = $clients->first()->title->name;
 
         $data = [
             'status' => true,
             'message' => 'Here are your client list:',
-            'title' => $firstCspTitle,
-            'data' => $formattedCsps
+            'title' => $firstclientTitle,
+            'data' => $formattedclients
+        ];
+
+        return response()->json($data, 200);
+    }
+
+    public function clientInfo()
+    {
+        $clients = HonorableClient::select(['title_id', 'image', 'description', 'link', 'is_active'])
+            ->get();
+
+        $formattedclients = [];
+
+        foreach ($clients as $client) {
+            $formattedclients[] = [
+                'title_id' => $client->title_id,
+                'image' => $client->image,
+                'description' => $client->description,
+                'link' => $client->link,
+                'is_active' => $client->is_active
+
+            ];
+        }
+
+        $firstclientTitle = $clients->first()->title->name;
+
+        $data = [
+            'status' => true,
+            'message' => 'Here are your client list:',
+            'title' => $firstclientTitle,
+            'data' => $formattedclients
         ];
 
         return response()->json($data, 200);
@@ -1249,16 +1413,14 @@ class IndexController extends Controller
     //Our teams
     public function createOurTeam(Request $request)
     {
-        $rules = array(
+        $validator = Validator::make($request->all(), [
             'title_id' => 'required',
             'name' => 'required',
             'image' => 'required',
             'department' => 'required',
             'designation' => 'required',
             'sequence' => 'required',
-        );
-
-        $validator = Validator::make($request->all(), $rules);
+        ]);
 
         if ($validator->fails()) {
             return response()->json([
@@ -1285,26 +1447,26 @@ class IndexController extends Controller
             ], 409);
         }
 
-        $index = new OurTeam();
+        $team = new OurTeam();
         if ($panelimage = $request->file('image')) {
             $imageName1 = time() . '-' . uniqid() . '.' . $panelimage->getClientOriginalExtension();
             $panelimage->move(public_path('Our team'), $imageName1);
         }
 
-        $index->title_id = $request->title_id;
-        $index->name = $request->name;
-        $index->image = $imageName1;
-        $index->department = $request->department;
-        $index->designation = $request->designation;
-        $index->sequence = $request->sequence;
+        $team->title_id = $request->title_id;
+        $team->name = $request->name;
+        $team->image = $imageName1;
+        $team->department = $request->department;
+        $team->designation = $request->designation;
+        $team->sequence = $request->sequence;
 
-        $index->save();
+        $team->save();
 
-        if ($index->save()) {
+        if ($team->save()) {
             $data = [
                 'status' => true,
                 'message' => 'Teams successfully created',
-                'data' => $index,
+                'data' => $team,
             ];
             return response()->json($data, 201);
         } else {
@@ -1319,8 +1481,8 @@ class IndexController extends Controller
 
     public function updateOurTeam(Request $request, $id)
     {
-        $index = OurTeam::find($id);
-        if (!$index) {
+        $teams = OurTeam::find($id);
+        if (!$teams) {
             return response()->json([
                 'status' => false,
                 'message' => 'Team member id not found',
@@ -1328,39 +1490,39 @@ class IndexController extends Controller
         }
 
         if ($image1 = $request->file('image')) {
-            if ($index->image && file_exists(public_path('Our team') . '/' . $index->image)) {
-                unlink(public_path('Our team') . '/' . $index->image);
+            if ($teams->image && file_exists(public_path('Our team') . '/' . $teams->image)) {
+                unlink(public_path('Our team') . '/' . $teams->image);
             }
 
             $imageName1 = time() . '-' . uniqid() . '.' . $image1->getClientOriginalExtension();
             $image1->move(public_path('Our team'), $imageName1);
 
-            $index->update([
+            $teams->update([
                 'image' => $imageName1,
             ]);
         }
-        $index->update([
+        $teams->update([
             'title_id' => $request->title_id,
             'name' => $request->name,
             'department' => $request->department,
             'designation' => $request->designation,
             'sequence' => $request->sequence,
-            'isActive' => $request->isActive
+            'is_active' => $request->is_active
         ]);
 
         $all_data = [
-            'image' => $index->image,
-            'name' => $index->name,
-            'department' => $index->department,
-            'designation' => $index->designation,
-            'sequence' => $index->sequence,
-            'isActive' => $index->isActive
+            'image' => $teams->image,
+            'name' => $teams->name,
+            'department' => $teams->department,
+            'designation' => $teams->designation,
+            'sequence' => $teams->sequence,
+            'is_active' => $teams->is_active
         ];
 
         $data = [
             'status' => 200,
             'message' => "Team member updated successfully",
-            'title' => $index->title->name,
+            'title' => $teams->title->name,
             'data' => $all_data,
         ];
 
@@ -1369,33 +1531,66 @@ class IndexController extends Controller
 
     public function ourTeamMemberList()
     {
-        $csps = OurTeam::where('isActive', true)
-            ->select(['title_id', 'name', 'image', 'department', 'designation', 'sequence', 'isActive'])
+        $teams = OurTeam::where('is_active', true)
+            ->select(['title_id', 'name', 'image', 'department', 'designation', 'sequence', 'is_active'])
             ->orderBy('sequence', 'ASC')
             ->get();
 
-        $formattedCsps = [];
+        $formattedteams = [];
 
-        foreach ($csps as $csp) {
-            $formattedCsps[] = [
-                'title_id' => $csp->title_id,
-                'name' => $csp->name,
-                'image' => $csp->image,
-                'department' => $csp->department,
-                'designation' => $csp->designation,
-                'sequence' => $csp->sequence,
-                'isActive' => $csp->isActive
+        foreach ($teams as $team) {
+            $formattedteams[] = [
+                'title_id' => $team->title_id,
+                'name' => $team->name,
+                'image' => $team->image,
+                'department' => $team->department,
+                'designation' => $team->designation,
+                'sequence' => $team->sequence,
+                'is_active' => $team->is_active
 
             ];
         }
 
-        $firstCspTitle = $csps->first()->title->name;
+        $firstteamTitle = $teams->first()->title->name;
 
         $data = [
             'status' => true,
             'message' => 'Here are our team member list:',
-            'title' => $firstCspTitle,
-            'data' => $formattedCsps
+            'title' => $firstteamTitle,
+            'data' => $formattedteams
+        ];
+
+        return response()->json($data, 200);
+    }
+
+    public function teammemberInfo()
+    {
+        $teams = OurTeam::select(['title_id', 'name', 'image', 'department', 'designation', 'sequence', 'is_active'])
+            ->orderBy('sequence', 'ASC')
+            ->get();
+
+        $formattedteams = [];
+
+        foreach ($teams as $team) {
+            $formattedteams[] = [
+                'title_id' => $team->title_id,
+                'name' => $team->name,
+                'image' => $team->image,
+                'department' => $team->department,
+                'designation' => $team->designation,
+                'sequence' => $team->sequence,
+                'is_active' => $team->is_active
+
+            ];
+        }
+
+        $firstteamTitle = $teams->first()->title->name;
+
+        $data = [
+            'status' => true,
+            'message' => 'Here are our team member list:',
+            'title' => $firstteamTitle,
+            'data' => $formattedteams
         ];
 
         return response()->json($data, 200);
@@ -1404,13 +1599,11 @@ class IndexController extends Controller
     //Case Studies
     public function createCaseStudies(Request $request)
     {
-        $rules = array(
+        $validator = Validator::make($request->all(), [
             'title_id' => 'required',
             'title_name' => 'required',
             'description' => 'required'
-        );
-
-        $validator = Validator::make($request->all(), $rules);
+        ]);
 
         if ($validator->fails()) {
             return response()->json([
@@ -1428,19 +1621,19 @@ class IndexController extends Controller
             ], 400);
         }
 
-        $index = new CaseStudy();
+        $case = new CaseStudy();
 
 
-        $index->title_id = $request->title_id;
-        $index->title_name = $request->title_name;
-        $index->description = $request->description;
-        $index->save();
+        $case->title_id = $request->title_id;
+        $case->title_name = $request->title_name;
+        $case->description = $request->description;
+        $case->save();
 
-        if ($index->save()) {
+        if ($case->save()) {
             $data = [
                 'status' => true,
                 'message' => 'Case studies successfully created',
-                'data' => $index,
+                'data' => $case,
             ];
             return response()->json($data, 201);
         } else {
@@ -1455,24 +1648,24 @@ class IndexController extends Controller
 
     public function updateCaseStudies(Request $request, $id)
     {
-        $index = CaseStudy::find($id);
-        if (!$index) {
+        $case = CaseStudy::find($id);
+        if (!$case) {
             return response()->json([
                 'status' => false,
                 'message' => 'Case is not found',
             ], 404);
         }
-        $index->update([
+        $case->update([
             'title_id' => $request->title_id,
             'title' => $request->title,
             'description' => $request->description,
-            'isActive' => $request->isActive
+            'is_active' => $request->is_active
         ]);
 
         $all_data = [
-            'title' => $index->title,
-            'description' => $index->description,
-            'isActive' => $index->isActive
+            'title' => $case->title,
+            'description' => $case->description,
+            'is_active' => $case->is_active
         ];
 
         $data = [
@@ -1486,8 +1679,8 @@ class IndexController extends Controller
 
     public function caseStudyList()
     {
-        $cases = CaseStudy::where('isActive', true)
-            ->select(['title_id', 'title_name', 'description', 'isActive'])
+        $cases = CaseStudy::where('is_active', true)
+            ->select(['title_id', 'title_name', 'description', 'is_active'])
             ->get();
 
         $formattedcase = [];
@@ -1497,7 +1690,7 @@ class IndexController extends Controller
                 'title_id' => $case->title_id,
                 'title_name' => $case->title_name,
                 'description' => $case->description,
-                'isActive' => $case->isActive
+                'is_active' => $case->is_active
 
             ];
         }
@@ -1506,7 +1699,36 @@ class IndexController extends Controller
 
         $data = [
             'status' => true,
-            'message' => 'Here are our team member list:',
+            'message' => 'Here are our case study list:',
+            'title' => $title_id,
+            'data' => $formattedcase
+        ];
+
+        return response()->json($data, 200);
+    }
+
+    public function caseStudyInfo()
+    {
+        $cases = CaseStudy::select(['title_id', 'title_name', 'description', 'is_active'])
+            ->get();
+
+        $formattedcase = [];
+
+        foreach ($cases as $case) {
+            $formattedcase[] = [
+                'title_id' => $case->title_id,
+                'title_name' => $case->title_name,
+                'description' => $case->description,
+                'is_active' => $case->is_active
+
+            ];
+        }
+
+        $title_id = $cases->first()->title->name;
+
+        $data = [
+            'status' => true,
+            'message' => 'Here are our case study list:',
             'title' => $title_id,
             'data' => $formattedcase
         ];
@@ -1517,7 +1739,7 @@ class IndexController extends Controller
     //Testimonial
     public function createTestimonial(Request $request)
     {
-        $rules = array(
+        $validator = Validator::make($request->all(), [
             'title_id' => 'required',
             'subtitle_id' => 'required',
             'image' => 'required',
@@ -1525,9 +1747,7 @@ class IndexController extends Controller
             'designation' => 'required',
             'review' => 'required',
             'feed_back' => 'required'
-        );
-
-        $validator = Validator::make($request->all(), $rules);
+        ]);
 
         if ($validator->fails()) {
             return response()->json([
@@ -1544,26 +1764,26 @@ class IndexController extends Controller
                 'data' => [],
             ], 400);
         }
-        $index = new Testimonial();
+        $testimonial = new Testimonial();
         if ($panelimage = $request->file('image')) {
             $imageName1 = time() . '-' . uniqid() . '.' . $panelimage->getClientOriginalExtension();
             $panelimage->move(public_path('Testimonial'), $imageName1);
         }
 
-        $index->title_id = $request->title_id;
-        $index->subtitle_id = $request->subtitle_id;
-        $index->name = $request->name;
-        $index->image = $imageName1;
-        $index->designation = $request->designation;
-        $index->review = $request->review;
-        $index->feed_back = $request->feed_back;
-        $index->save();
+        $testimonial->title_id = $request->title_id;
+        $testimonial->subtitle_id = $request->subtitle_id;
+        $testimonial->name = $request->name;
+        $testimonial->image = $imageName1;
+        $testimonial->designation = $request->designation;
+        $testimonial->review = $request->review;
+        $testimonial->feed_back = $request->feed_back;
+        $testimonial->save();
 
-        if ($index->save()) {
+        if ($testimonial->save()) {
             $data = [
                 'status' => true,
                 'message' => 'Testimonial successfully created',
-                'data' => $index,
+                'data' => $testimonial,
             ];
             return response()->json($data, 201);
         } else {
@@ -1578,8 +1798,8 @@ class IndexController extends Controller
 
     public function updateTestimonial(Request $request, $id)
     {
-        $index = Testimonial::find($id);
-        if (!$index) {
+        $testimonial = Testimonial::find($id);
+        if (!$testimonial) {
             return response()->json([
                 'status' => false,
                 'message' => 'Testimonial id not found',
@@ -1587,33 +1807,33 @@ class IndexController extends Controller
         }
 
         if ($image1 = $request->file('image')) {
-            if ($index->image && file_exists(public_path('Testimonial') . '/' . $index->image)) {
-                unlink(public_path('Testimonial') . '/' . $index->image);
+            if ($testimonial->image && file_exists(public_path('Testimonial') . '/' . $testimonial->image)) {
+                unlink(public_path('Testimonial') . '/' . $testimonial->image);
             }
 
             $imageName1 = time() . '-' . uniqid() . '.' . $image1->getClientOriginalExtension();
             $image1->move(public_path('Testimonial'), $imageName1);
 
-            $index->update([
+            $testimonial->update([
                 'image' => $imageName1,
             ]);
         }
-        $index->update([
+        $testimonial->update([
             'title_id' => $request->title_id,
-            'sub_title_id'=>$request->sub_title_id,
+            'sub_title_id' => $request->sub_title_id,
             'name' => $request->name,
-            'designation'=>$request->designation,
-            'review'=>$request->review,
-            'feed_back'=>$request->feed_back,
-            'isActive' => $request->isActive
+            'designation' => $request->designation,
+            'review' => $request->review,
+            'feed_back' => $request->feed_back,
+            'is_active' => $request->is_active
         ]);
 
         $all_data = [
-            'title' => $index->title->name,
-            'sub_title'=>$index->subtitle->name,
-            'name' => $index->name,
-            'review' => $index->review,
-            'isActive' => $index->isActive
+            'title' => $testimonial->title->name,
+            'sub_title' => $testimonial->subtitle->name,
+            'name' => $testimonial->name,
+            'review' => $testimonial->review,
+            'is_active' => $testimonial->is_active
         ];
 
         $data = [
@@ -1627,35 +1847,66 @@ class IndexController extends Controller
 
     public function testimonialList()
     {
-        $cases = Testimonial::where('isActive', true)
-            ->select(['title_id', 'subtitle_id','name','image','review','feed_back','isActive'])
+        $testiminoials = Testimonial::where('is_active', true)
+            ->select(['title_id', 'subtitle_id', 'name', 'image', 'review', 'feed_back', 'is_active'])
             ->get();
 
-        $formattedcase = [];
+        $formattedtestimonial = [];
 
-        foreach ($cases as $case) {
-            $formattedcase[] = [
-                'title_id' => $case->title_id,
-                'subtitle_id' => $case->subtitle_id,
-                'name' => $case->name,
-                'image'=>$case->image,
-                'review'=>$case->review,
-                'feed_back'=>$case->feed_back,
-                'isActive' => $case->isActive
+        foreach ($testiminoials as $testimonial) {
+            $formattedtestimonial[] = [
+                'title_id' => $testimonial->title_id,
+                'subtitle_id' => $testimonial->subtitle_id,
+                'name' => $testimonial->name,
+                'image' => $testimonial->image,
+                'review' => $testimonial->review,
+                'feed_back' => $testimonial->feed_back,
+                'is_active' => $testimonial->is_active
             ];
         }
 
-        $title_id = $cases->first()->title->name;
-        $subtitle=$cases->first()->subtitle->name;
+        $title_id = $testiminoials->first()->title->name;
+        $subtitle = $testiminoials->first()->subtitle->name;
         $data = [
             'status' => true,
             'message' => 'Here are our team member list:',
             'title' => $title_id,
-            'sub_tilte'=>$subtitle,
-            'data' => $formattedcase
+            'sub_tilte' => $subtitle,
+            'data' => $formattedtestimonial
         ];
 
         return response()->json($data, 200);
     }
-    
+
+    public function testimonialInfo()
+    {
+        $testimonials = Testimonial::select(['title_id', 'subtitle_id', 'name', 'image', 'review', 'feed_back', 'is_active'])
+            ->get();
+
+        $formattedtestimonial = [];
+
+        foreach ($testimonials as $testimonial) {
+            $formattedtestimonial[] = [
+                'title_id' => $testimonial->title_id,
+                'subtitle_id' => $testimonial->subtitle_id,
+                'name' => $testimonial->name,
+                'image' => $testimonial->image,
+                'review' => $testimonial->review,
+                'feed_back' => $testimonial->feed_back,
+                'is_active' => $testimonial->is_active
+            ];
+        }
+
+        $title_id = $testimonials->first()->title->name;
+        $subtitle = $testimonials->first()->subtitle->name;
+        $data = [
+            'status' => true,
+            'message' => 'Here are our team member list:',
+            'title' => $title_id,
+            'sub_tilte' => $subtitle,
+            'data' => $formattedtestimonial
+        ];
+
+        return response()->json($data, 200);
+    }
 }

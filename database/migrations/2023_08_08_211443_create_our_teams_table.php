@@ -22,7 +22,7 @@ class CreateOurTeamsTable extends Migration
             $table->string('designation')->nullable();
             $table->string('image');
             $table->string('sequence');
-            $table->boolean('isActive')->default(true)->nullable();
+            $table->boolean('is_active')->default(true)->nullable();
             $table->timestamps();
         });
     }

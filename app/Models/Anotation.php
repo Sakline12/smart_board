@@ -16,7 +16,7 @@ class Anotation extends Model
       'field_two',
       'field_three',
       'background_image',
-      'isActive'
+      'is_active'
     ];
 
     

@@ -18,7 +18,7 @@ class CreateSubTitlesTable extends Migration
             $table->string('name');
             $table->text('description')->nullable();
             $table->string('category');
-            $table->boolean('isActive')->default(true)->nullable();
+            $table->boolean('is_active')->default(true)->nullable();
             $table->timestamps();
         });
     }

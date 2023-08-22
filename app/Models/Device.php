@@ -14,7 +14,7 @@ class Device extends Model
       'subtitle_id',
       'image_id',
       'name',
-      'isActive'
+      'is_active'
     ];
 
     

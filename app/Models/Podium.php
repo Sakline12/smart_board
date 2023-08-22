@@ -14,7 +14,7 @@ class Podium extends Model
       'description',
       'background_image',
       'image',
-      'isActive'
+      'is_active'
     ];
 
     public function title()

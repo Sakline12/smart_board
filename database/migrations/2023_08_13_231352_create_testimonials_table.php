@@ -23,8 +23,8 @@ class CreateTestimonialsTable extends Migration
             $table->string('name');
             $table->string('designation');
             $table->string('review');
-            $table->string('feed_back');
-            $table->boolean('isActive')->default(true)->nullable();
+            $table->text('feed_back');
+            $table->boolean('is_active')->default(true)->nullable();
             $table->timestamps();
         });
     }

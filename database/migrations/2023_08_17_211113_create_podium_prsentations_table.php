@@ -26,7 +26,7 @@ class CreatePodiumPrsentationsTable extends Migration
             $table->bigInteger('image_id_three')->unsigned();
             $table->foreign('image_id_three')->references('id')->on('podium_prsesntation_images')->onDelete('cascade');
             $table->text('name');
-            $table->boolean('isActive')->default(true)->nullable();
+            $table->boolean('is_active')->default(true)->nullable();
             $table->timestamps();
         });
     }

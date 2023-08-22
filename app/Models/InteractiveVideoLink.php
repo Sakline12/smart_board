@@ -13,6 +13,6 @@ class InteractiveVideoLink extends Model
       'link',
       'name',
       'category',
-      'isActive'
+      'is_active'
     ];
 }

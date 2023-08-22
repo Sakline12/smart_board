@@ -7,7 +7,7 @@ use App\Models\ContactIntroduction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\SendEmail;
+use PHPMailer\PHPMailer\PHPMailer;
 use App\Models\Location;
 
 class ContactController extends Controller
@@ -15,12 +15,10 @@ class ContactController extends Controller
     //Contact introduction
     public function createContactIntroduction(Request $request)
     {
-        $rules = array(
+        $validator = Validator::make($request->all(),[
             'title_id' => 'required',
             'background_image' => 'required',
-        );
-
-        $validator = Validator::make($request->all(), $rules);
+        ]);
 
         if ($validator->fails()) {
             return response()->json([
@@ -99,12 +97,12 @@ class ContactController extends Controller
 
         $Contact->update([
             'title_id' => $request->title_id,
-            'isActive' => $request->isActive
+            'is_active' => $request->is_active
         ]);
 
         $all_data = [
             'title_id' => $Contact->title_id,
-            'isActive' => $Contact->isActive
+            'is_active' => $Contact->is_active
         ];
 
         $data = [
@@ -118,12 +116,25 @@ class ContactController extends Controller
 
     public function contactIntroductionDetails()
     {
-        $data = ContactIntroduction::where('isActive', true)->first();
-        $title=$data->title->name;
+        $data = ContactIntroduction::where('is_active', true)->first();
+        $title = $data->title->name;
         $data = [
             'status' => true,
             'message' => 'Here contact introduction details',
-            'title'=>$title,
+            'title' => $title,
+            'data' => $data,
+        ];
+        return response()->json($data, 200);
+    }
+
+    public function contactIntroductionInfo()
+    {
+        $data = ContactIntroduction::first();
+        $title = $data->title->name;
+        $data = [
+            'status' => true,
+            'message' => 'Here contact introduction details',
+            'title' => $title,
             'data' => $data,
         ];
         return response()->json($data, 200);
@@ -132,7 +143,7 @@ class ContactController extends Controller
     //Mail
     public function mailSend(Request $request)
     {
-       return response()->json('Thanks');
+        return response()->json('Thanks');
     }
 
 
@@ -142,7 +153,7 @@ class ContactController extends Controller
         $rules = array(
             'address' => 'required',
             'phone' => 'required',
-            'mail'=>'required'
+            'mail' => 'required'
         );
 
         $validator = Validator::make($request->all(), $rules);
@@ -200,15 +211,15 @@ class ContactController extends Controller
         $location->update([
             'address' => $request->address,
             'phone' => $request->phone,
-            'mail'=>$request->mail,
-            'isActive'=>$request->isActive
+            'mail' => $request->mail,
+            'is_active' => $request->is_active
         ]);
 
         $all_data = [
             'address' => $location->address,
             'phone' => $location->phone,
             'mail' => $location->mail,
-            'isActive' => $location->isActive
+            'is_active' => $location->is_active
         ];
 
         $data = [
@@ -220,7 +231,8 @@ class ContactController extends Controller
         return response()->json($data);
     }
 
-    public function locationDetails(){
+    public function locationDetails()
+    {
         $data = Location::all();
         $data = [
             'status' => true,
@@ -230,17 +242,99 @@ class ContactController extends Controller
         return response()->json($data, 200);
     }
 
-    public function mailSent(Request $request){
-        $data = $request->validate([
-            'email' => 'required|email',
-            'subject' => 'required|string',
-            'message' => 'required|string',
-        ]);
+    public function sendEmail(Request $request)
+    {
+        $email = $request->input('mail');
+        $subject = $request->input('subject');
+        $message = htmlspecialchars($request->input('message'), ENT_QUOTES, 'UTF-8');
 
-        $contact = Contact::create($data);
+        $mail = new Contact();
+        $mail->mail = $email;
+        $mail->subject = $subject;
+        $mail->message = $message;
+        $mail->save();
 
-        // Mail::to($contact->email)->send(new SendEmail($contact));
+        $submit_message = "
+        <table style='width: 100%; border-collapse: collapse;'>
+        <tr style='background-color: #115060; color: white;'>
+        <th style='padding: 10px; border: 1px solid #ddd;'>Field</th>
+        <th style='padding: 10px; border: 1px solid #ddd;'>Value</th>
+        </tr>
+        <tr>
+        <td style='padding: 10px; border: 1px solid #ddd;'>From</td>
+        <td style='padding: 10px; border: 1px solid #ddd;'>$email</td>
+        </tr>
+        <tr>
+        <td style='padding: 10px; border: 1px solid #ddd;'>Subject</td>
+        <td style='padding: 10px; border: 1px solid #ddd;'>$subject</td>
+        </tr>
+        <tr>
+        <td style='padding: 10px; border: 1px solid #ddd;'>Details</td>
+        <td style='padding: 10px; border: 1px solid #ddd;'>$message</td>
+        </tr>
+        </table>
+        ";
 
-        return response()->json(['message' => 'Email sent successfully'], 200);
+
+        $mail = new PHPMailer(true);
+
+        try {
+            // SMTP Settings
+            $mail->isSMTP();
+            $mail->Host = "smtp.gmail.com";
+            $mail->SMTPAuth = true;
+            $mail->Username = "saklineheemel51@gmail.com";
+            $mail->Password = 'fosrudjikgtiqhay';
+            $mail->Port = 587;
+            $mail->SMTPSecure = "tls";
+
+            // Email Settings
+            $mail->isHTML(true);
+            $mail->setFrom($email);
+            $mail->addAddress("saklineheemel51@gmail.com");
+            $mail->Subject = "$email ($subject)";
+            $mail->Body = $submit_message;
+
+            $mail->send();
+
+            $status = "success";
+            $response = "Email is sent!";
+        } catch (\Exception $e) {
+            $status = "failed";
+            $response = "Something is wrong: " . $e->getMessage();
+        }
+
+        return response()->json(["status" => $status, "response" => $response]);
+    }
+
+    public function deleteMail(Request $request, $id)
+    {
+        $Mail = Contact::where('id', $id)->delete();
+        if ($Mail) {
+            $data = [
+                'status' => true,
+                'message' => 'Delete this items successfully',
+                'data' => $Mail
+            ];
+            return response()->json($data);
+        } else {
+            $data = [
+                'status' => false,
+                'message' => 'Error has has been occured',
+                'data' => $Mail
+            ];
+            return response()->json($data, 500);
+        }
+    }
+
+    public function mailList()
+    {
+        $data = Contact::all();
+        $data = [
+            'status' => true,
+            'message' => 'Here contact details',
+            'data' => $data,
+        ];
+        return response()->json($data, 200);
     }
 }

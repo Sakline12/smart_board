@@ -18,13 +18,13 @@ class CreatePodiumIntroductionsTable extends Migration
             $table->bigInteger('title_id')->unsigned();
             $table->foreign('title_id')->references('id')->on('titles')->onDelete('cascade');
             $table->string('sub_title');
-            $table->string('description_one');
-            $table->string('description_two');
+            $table->text('description_one');
+            $table->text('description_two');
             $table->string('button_text_one');
             $table->string('button_text_two');
             $table->string('button_link_one');
             $table->string('button_link_two');
-            $table->boolean('isActive')->default(true)->nullable();
+            $table->boolean('is_active')->default(true)->nullable();
             $table->timestamps();
         });
     }

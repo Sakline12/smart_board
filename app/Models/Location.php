@@ -13,6 +13,6 @@ class Location extends Model
       'address',
       'phone',
       'mail',
-      'isActive'
+      'is_active'
     ];
 }

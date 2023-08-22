@@ -12,7 +12,7 @@ class DeviceImage extends Model
     protected $fillable=[
       'image',
       'category',
-      'isActive'
+      'is_active'
     ];
 
     

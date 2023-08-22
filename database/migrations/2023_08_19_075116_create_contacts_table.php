@@ -18,7 +18,7 @@ class CreateContactsTable extends Migration
             $table->string('mail');
             $table->text('subject');
             $table->text('message');
-            $table->boolean('isActive')->default(true)->nullable();
+            $table->boolean('is_active')->default(true)->nullable();
             $table->timestamps();
         });
     }

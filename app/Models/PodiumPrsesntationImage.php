@@ -14,7 +14,7 @@ class PodiumPrsesntationImage extends Model
       'image_id_two',
       'image_id_three',
       'category',
-      'isActive'
+      'is_active'
     ];
 
     public function podiumpresentation()

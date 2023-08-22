@@ -17,9 +17,9 @@ class CreatePodiumFeaturesTable extends Migration
             $table->id();
             $table->bigInteger('title_id')->unsigned();
             $table->foreign('title_id')->references('id')->on('titles')->onDelete('cascade');
-            $table->string('description');
+            $table->text('description');
             $table->string('background_image');
-            $table->boolean('isActive')->default(true)->nullable();
+            $table->boolean('is_active')->default(true)->nullable();
             $table->timestamps();
         });
     }

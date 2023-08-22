@@ -23,7 +23,7 @@ class CreateConferencesTable extends Migration
             $table->string('sub_image2');
             $table->string('sub_image3');
             $table->string('sub_image4');
-            $table->boolean('isActive')->default(true)->nullable();
+            $table->boolean('is_active')->default(true)->nullable();
             $table->timestamps();
         });
     }

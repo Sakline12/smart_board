@@ -17,11 +17,11 @@ class CreateSignageIntroductionsTable extends Migration
             $table->id();
             $table->bigInteger('title_id')->unsigned();
             $table->foreign('title_id')->references('id')->on('titles')->onDelete('cascade');
-            $table->string('header');
+            $table->text('header');
             $table->string('header_link');
             $table->string('image');
             $table->string('background_image');
-            $table->boolean('isActive')->default(true)->nullable();
+            $table->boolean('is_active')->default(true)->nullable();
             $table->timestamps();
         });
     }

@@ -19,7 +19,7 @@ class CreateProductsTable extends Migration
             $table->foreign('title_id')->references('id')->on('titles')->onDelete('cascade');
             $table->string('product_image');
             $table->string('background_img');
-            $table->boolean('isActive')->default(true)->nullable();
+            $table->boolean('is_active')->default(true)->nullable();
             $table->timestamps();
         });
     }

@@ -18,7 +18,7 @@ class CreateLocationsTable extends Migration
             $table->text('address');
             $table->text('phone');
             $table->text('mail');
-            $table->boolean('isActive')->default(true)->nullable();
+            $table->boolean('is_active')->default(true)->nullable();
             $table->timestamps();
         });
     }

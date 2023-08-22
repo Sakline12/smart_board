@@ -20,7 +20,7 @@ class CreateHonorableClientsTable extends Migration
             $table->text('description')->nullable();
             $table->string('image');
             $table->string('link')->nullable();
-            $table->boolean('isActive')->default(true)->nullable();
+            $table->boolean('is_active')->default(true)->nullable();
             $table->timestamps();
         });
     }

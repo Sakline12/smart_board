@@ -17,8 +17,8 @@ class CreateSignageVideoLinksTable extends Migration
             $table->id();
             $table->bigInteger('title_id')->unsigned()->nullable();
             $table->foreign('title_id')->references('id')->on('titles')->onDelete('cascade');
-            $table->string('link_name');
-            $table->boolean('isActive')->default(true)->nullable();
+            $table->text('link_name');
+            $table->boolean('is_active')->default(true)->nullable();
             $table->timestamps();
         });
     }

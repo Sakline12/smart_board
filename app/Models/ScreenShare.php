@@ -12,7 +12,7 @@ class ScreenShare extends Model
     protected $fillable=[
       'title_id',
       'description',
-      'isActive'
+      'is_active'
     ];
 
     public function title()

@@ -13,7 +13,7 @@ class Title extends Model
       'name',
       'description',
       'category',
-      'isActive'
+      'is_active'
     ];
 
 
@@ -22,9 +22,9 @@ class Title extends Model
         return $this->hasMany(product::class, 'title_id', 'id');
     }
 
-    public function csp()
+    public function completesolutionprovider()
     {
-        return $this->hasMany(csp::class, 'title_id', 'id');
+        return $this->hasMany(completesolutionprovider::class, 'title_id', 'id');
     }
 
     public function education()

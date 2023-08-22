@@ -17,7 +17,7 @@ class Education extends Model
       'description',
       'button_text',
       'button_link',
-      'isActive'
+      'is_active'
     ];
 
     
