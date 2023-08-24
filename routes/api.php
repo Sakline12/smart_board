@@ -236,6 +236,9 @@ Route::post('create-image-device',[DepartmentController::class,'createDeviceImag
 Route::post('update-device-image/{id}',[DepartmentController::class,'updateDeviceImage']);
 Route::get('device-image-list',[DepartmentController::class,'listOfDeviceImage']);
 
+//Podium Prsentation Image
+Route::post('create-podium-presentation-image',[DepartmentController::class,'createPodiumPresentationImage']);
+
 });
 
 //Everybody acccess

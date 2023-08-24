@@ -143,7 +143,7 @@ class InteractiveController extends Controller
         return response()->json($data);
     }
 
-    public function InteractiveSliderDetails()
+    public function InteractiveSliderInfo()
     {
         $slider = InteractiveSlider::where('is_active', true)->first();
 
@@ -157,7 +157,7 @@ class InteractiveController extends Controller
         return response()->json($data, 200);
     }
 
-    public function InteractiveSliderInfo()
+    public function InteractiveSliderDetails()
     {
         $slider = InteractiveSlider::first();
 
@@ -277,7 +277,7 @@ class InteractiveController extends Controller
         return response()->json($data);
     }
 
-    public function deviceItems()
+    public function deviceInfo()
     {
         $devices = Device::where('is_active', true)
             ->select(['title_id', 'subtitle_id', 'name', 'image_id', 'is_active'])
@@ -307,7 +307,7 @@ class InteractiveController extends Controller
         return response()->json($data, 200);
     }
 
-    public function deviceInfo()
+    public function deviceItems()
     {
         $devices = Device::select(['title_id', 'subtitle_id', 'name', 'image_id', 'is_active'])
             ->get();

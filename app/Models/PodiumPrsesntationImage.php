@@ -10,9 +10,7 @@ class PodiumPrsesntationImage extends Model
     use HasFactory;
     protected $table='podium_prsesntation_images';
     protected $fillable=[
-      'image_id_one',
-      'image_id_two',
-      'image_id_three',
+      'image',
       'category',
       'is_active'
     ];

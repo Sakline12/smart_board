@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Department;
 use App\Models\Designation;
 use App\Models\DeviceImage;
+use App\Models\PodiumPrsesntationImage;
 use App\Models\SubTitle;
 use App\Models\Title;
 use Illuminate\Http\Request;
@@ -595,4 +596,60 @@ class DepartmentController extends Controller
 
         return response()->json($data);
     }
+
+    public function createPodiumPresentationImage(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'image' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Validation Failed',
+                'errors' => $validator->errors()
+            ], 400);
+        }
+
+        $imageCount = PodiumPrsesntationImage::count();
+        if ($imageCount >= 3) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Maximum image limit (3) reached',
+                'data' => [],
+            ], 403);
+        }
+
+        if ($image = $request->file('image')) {
+            $imageName = time() . '-' . uniqid() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('presentation_image'), $imageName);
+
+            $device_image = new PodiumPrsesntationImage();
+            $device_image->image = $imageName;
+            $device_image->save();
+
+            if ($device_image) {
+                $data = [
+                    'status' => true,
+                    'message' => 'Podium presentation image successfully created',
+                    'data' => $device_image,
+                ];
+                return response()->json($data, 201);
+            } else {
+                $data = [
+                    'status' => false,
+                    'message' => 'Error occurred',
+                    'data' => [],
+                ];
+                return response()->json($data, 500);
+            }
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => 'No image file provided',
+                'data' => [],
+            ], 400);
+        }
+    }
+
 }

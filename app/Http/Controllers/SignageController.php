@@ -146,15 +146,24 @@ class SignageController extends Controller
     public function signageIntroductionDetails()
     {
         $data = SignageIntroduction::where('is_active', true)->first();
+        if ($data) {
+            $data = [
+                'status' => true,
+                'message' => 'Here signage introduction details:',
+                'title' => $data->title->name,
+                'data' => $data,
 
-        $data = [
-            'status' => true,
-            'message' => 'Here signage introduction details:',
-            'title' => $data->title->name,
-            'data' => $data,
+            ];
+            return response()->json($data, 200);
+        } else {
+            $data = [
+                'status' => false,
+                'message' => 'Data is not active',
+                'data' => [],
 
-        ];
-        return response()->json($data, 200);
+            ];
+            return response()->json($data, 404);
+        }
     }
 
     public function signageIntroductionInfo()
@@ -457,15 +466,24 @@ class SignageController extends Controller
     public function detailsOfSlignageSlider()
     {
         $data = SignageSlider::where('is_active', true)->first();
+        if ($data) {
+            $data = [
+                'status' => true,
+                'message' => 'Here signage slider details:',
+                'title' => $data->title->name,
+                'data' => $data,
 
-        $data = [
-            'status' => true,
-            'message' => 'Here signage slider details:',
-            'title' => $data->title->name,
-            'data' => $data,
+            ];
+            return response()->json($data, 200);
+        } else {
+            $data = [
+                'status' => false,
+                'message' => 'Data is not active',
+                'data' => $data,
 
-        ];
-        return response()->json($data, 200);
+            ];
+            return response()->json($data, 404);
+        }
     }
 
     public function infoOfSlignageSlider()
@@ -629,7 +647,7 @@ class SignageController extends Controller
         return response()->json($data, 200);
     }
 
-    
+
 
     //video link
     public function addVideoLink(Request $request)

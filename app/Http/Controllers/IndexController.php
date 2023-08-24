@@ -227,8 +227,11 @@ class IndexController extends Controller
         }
     }
 
-    public function allProduct()
+    public function allProduct(Request $request)
     {
+return $request->all();
+
+
         $index = Product::where('is_active', true)->first();
         if ($index) {
             $data = [
