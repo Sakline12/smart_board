@@ -18,7 +18,7 @@ class PodiumPrsesntationImage extends Model
     public function podiumpresentation()
     {
         return $this->hasMany(PodiumPresentation::class, 'image_id_one')
-                    ->orWhere('image_id_two','id')
+                    ->orWhere('image_id_two','id')           
                     ->orWhere('image_id_three','id');
-    }
+    }        
 }

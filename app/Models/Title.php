@@ -106,7 +106,7 @@ class Title extends Model
 
     
     public function podiumpresentation(){
-        return $this->hasOne(podiumpresentation::class,'title_id','id');
+        return $this->hasMany(podiumpresentation::class,'title_id','id');
     }
 
     public function signageintroduction(){

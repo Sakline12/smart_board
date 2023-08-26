@@ -203,7 +203,6 @@ Route::post('create-a-location',[ContactController::class,'createLocation']);
 Route::post('update-a-location/{id}',[ContactController::class,'updateLocation']);
 
 //Form
-Route::post('send-a-mail',[ContactController::class, 'sendEmail']);
 Route::delete('delete-a-mail/{id}',[ContactController::class,'deleteMail']);
 
 Route::get('mail-list',[ContactController::class,'mailList']);
@@ -273,6 +272,7 @@ Route::group(['prefix' => 'open'], function () {
     Route::get('signage-video-link-details',[SignageController::class,'videoLinkDetails']);
     Route::get('contact-introduction-details',[ContactController::class,'contactIntroductionDetails']);
     Route::get('location-details',[ContactController::class,'locationDetails']);
+    Route::post('send-a-mail',[ContactController::class, 'sendEmail']);
     Route::get('unauthorized', function () {
         return response()->json(['status'=>false,'message' => 'Unauthorized.'], 401);
     })->name('unauthorized');

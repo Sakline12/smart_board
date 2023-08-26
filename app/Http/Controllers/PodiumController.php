@@ -909,26 +909,31 @@ class PodiumController extends Controller
             'image_id_three' => 'required',
             'name' => 'required',
         ]);
-
+    
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
                 'message' => 'Validation Failed',
                 'errors' => $validator->errors(),
             ], 400);
-        }
-
-        $existingPodium = PodiumPresentation::where('name', $request->input('name'))
-            ->first();
-
-        if ($existingPodium) {
+        }  
+        
+        if ($request->input('title_id') != 21) {
             return response()->json([
                 'status' => false,
-                'message' => 'Podium presentation with the same title_id and subtitle_id already exists',
+                'message' => 'Podium can only be created with title equal to 21',
+                'data' => [],
+            ], 400);
+        }
+
+        $wirelessdevice = PodiumPresentation::where('name', $request->input('name'))->first();
+        if ($wirelessdevice) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Same name already exists.',
                 'data' => [],
             ], 409);
         }
-
         $presentation = new PodiumPresentation();
         $presentation->title_id = $request->input('title_id');
         $presentation->subtitle_id = $request->input('subtitle_id');
@@ -936,11 +941,11 @@ class PodiumController extends Controller
         $presentation->image_id_two = $request->input('image_id_two');
         $presentation->image_id_three = $request->input('image_id_three');
         $presentation->name = $request->input('name');
-
+    
         if ($presentation->save()) {
             $data = [
                 'status' => true,
-                'message' => 'presentation presentation successfully created',
+                'message' => 'Podium presentation successfully created',
                 'data' => $presentation,
             ];
             return response()->json($data, 201);
