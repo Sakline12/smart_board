@@ -120,12 +120,12 @@ class IndexController extends Controller
         }
 
         if ($image = $request->file('image')) {
-            if ($index->image && file_exists(public_path('profile') . '/' . $index->image)) {
-                unlink(public_path('profile') . '/' . $index->image);
+            if ($index->image && file_exists(public_path('index') . '/' . $index->image)) {
+                unlink(public_path('index') . '/' . $index->image);
             }
 
             $imageName = time() . '-' . uniqid() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('profile'), $imageName);
+            $image->move(public_path('index'), $imageName);
 
             $index->update([
                 'image' => $imageName,
@@ -229,7 +229,7 @@ class IndexController extends Controller
 
     public function allProduct(Request $request)
     {
-return $request->all();
+        return $request->all();
 
 
         $index = Product::where('is_active', true)->first();
@@ -473,6 +473,7 @@ return $request->all();
         $panel = Panel::first();
         $data = [
             'status' => true,
+            'title' => $panel->title->name,
             'message' => "Here are all panel items:",
             'data' => $panel
         ];
@@ -878,17 +879,17 @@ return $request->all();
         $feature = new FeatureProduct();
         if ($panelimage = $request->file('master_image')) {
             $imageName1 = time() . '-' . uniqid() . '.' . $panelimage->getClientOriginalExtension();
-            $panelimage->move(public_path('featureProduct'), $imageName1);
+            $panelimage->move(public_path('featureproduct'), $imageName1);
         }
 
         if ($panelimage1 = $request->file('left_image')) {
             $imageName2 = time() . '-' . uniqid() . '.' . $panelimage1->getClientOriginalExtension();
-            $panelimage1->move(public_path('featureProduct'), $imageName2);
+            $panelimage1->move(public_path('featureproduct'), $imageName2);
         }
 
         if ($panelimage2 = $request->file('right_image')) {
             $imageName3 = time() . '-' . uniqid() . '.' . $panelimage2->getClientOriginalExtension();
-            $panelimage2->move(public_path('featureProduct'), $imageName3);
+            $panelimage2->move(public_path('featureproduct'), $imageName3);
         }
 
         $feature->title_id = $request->title_id;
@@ -929,12 +930,12 @@ return $request->all();
         }
 
         if ($image1 = $request->file('master_image')) {
-            if ($feature->master_image && file_exists(public_path('featureProduct') . '/' . $feature->master_image)) {
-                unlink(public_path('featureProduct') . '/' . $feature->master_image);
+            if ($feature->master_image && file_exists(public_path('featureproduct') . '/' . $feature->master_image)) {
+                unlink(public_path('featureproduct') . '/' . $feature->master_image);
             }
 
             $imageName1 = time() . '-' . uniqid() . '.' . $image1->getClientOriginalExtension();
-            $image1->move(public_path('featureProduct'), $imageName1);
+            $image1->move(public_path('featureproduct'), $imageName1);
 
             $feature->update([
                 'master_image' => $imageName1,
@@ -942,12 +943,12 @@ return $request->all();
         }
 
         if ($image2 = $request->file('left_image')) {
-            if ($feature->left_image && file_exists(public_path('featureProduct') . '/' . $feature->left_image)) {
-                unlink(public_path('featureProduct') . '/' . $feature->left_image);
+            if ($feature->left_image && file_exists(public_path('featureproduct') . '/' . $feature->left_image)) {
+                unlink(public_path('featureproduct') . '/' . $feature->left_image);
             }
 
             $imageName2 = time() . '-' . uniqid() . '.' . $image2->getClientOriginalExtension();
-            $image2->move(public_path('featureProduct'), $imageName2);
+            $image2->move(public_path('featureproduct'), $imageName2);
 
             $feature->update([
                 'left_image' => $imageName2,
@@ -955,12 +956,12 @@ return $request->all();
         }
 
         if ($image3 = $request->file('right_image')) {
-            if ($feature->right_image && file_exists(public_path('featureProduct') . '/' . $feature->right_image)) {
-                unlink(public_path('featureProduct') . '/' . $feature->right_image);
+            if ($feature->right_image && file_exists(public_path('featureproduct') . '/' . $feature->right_image)) {
+                unlink(public_path('featureproduct') . '/' . $feature->right_image);
             }
 
             $imageName3 = time() . '-' . uniqid() . '.' . $image3->getClientOriginalExtension();
-            $image3->move(public_path('featureProduct'), $imageName3);
+            $image3->move(public_path('featureproduct'), $imageName3);
 
             $feature->update([
                 'right_image' => $imageName3,
@@ -1279,7 +1280,7 @@ return $request->all();
         $client = new HonorableClient();
         if ($panelimage = $request->file('image')) {
             $imageName1 = time() . '-' . uniqid() . '.' . $panelimage->getClientOriginalExtension();
-            $panelimage->move(public_path('honorable_client'), $imageName1);
+            $panelimage->move(public_path('honorableclient'), $imageName1);
         }
 
         $client->title_id = $request->title_id;
@@ -1317,12 +1318,12 @@ return $request->all();
         }
 
         if ($image1 = $request->file('image')) {
-            if ($client->image && file_exists(public_path('honorable_client') . '/' . $client->image)) {
-                unlink(public_path('honorable_client') . '/' . $client->image);
+            if ($client->image && file_exists(public_path('honorableclient') . '/' . $client->image)) {
+                unlink(public_path('honorableclient') . '/' . $client->image);
             }
 
             $imageName1 = time() . '-' . uniqid() . '.' . $image1->getClientOriginalExtension();
-            $image1->move(public_path('honorable_client'), $imageName1);
+            $image1->move(public_path('honorableclient'), $imageName1);
 
             $client->update([
                 'image' => $imageName1,
@@ -1453,7 +1454,7 @@ return $request->all();
         $team = new OurTeam();
         if ($panelimage = $request->file('image')) {
             $imageName1 = time() . '-' . uniqid() . '.' . $panelimage->getClientOriginalExtension();
-            $panelimage->move(public_path('Our team'), $imageName1);
+            $panelimage->move(public_path('ourteam'), $imageName1);
         }
 
         $team->title_id = $request->title_id;
@@ -1482,8 +1483,9 @@ return $request->all();
         }
     }
 
-    public function updateOurTeam(Request $request, $id)
+    public function updateOurTeam(Request $request)
     {
+        $id= $request->id;
         $teams = OurTeam::find($id);
         if (!$teams) {
             return response()->json([
@@ -1493,12 +1495,12 @@ return $request->all();
         }
 
         if ($image1 = $request->file('image')) {
-            if ($teams->image && file_exists(public_path('Our team') . '/' . $teams->image)) {
-                unlink(public_path('Our team') . '/' . $teams->image);
+            if ($teams->image && file_exists(public_path('ourteam') . '/' . $teams->image)) {
+                unlink(public_path('ourteam') . '/' . $teams->image);
             }
 
             $imageName1 = time() . '-' . uniqid() . '.' . $image1->getClientOriginalExtension();
-            $image1->move(public_path('Our team'), $imageName1);
+            $image1->move(public_path('ourteam'), $imageName1);
 
             $teams->update([
                 'image' => $imageName1,
@@ -1535,14 +1537,13 @@ return $request->all();
     public function ourTeamMemberList()
     {
         $teams = OurTeam::where('is_active', true)
-            ->select(['title_id', 'name', 'image', 'department', 'designation', 'sequence', 'is_active'])
+            ->select(['id','title_id', 'name', 'image', 'department', 'designation', 'sequence', 'is_active'])
             ->orderBy('sequence', 'ASC')
             ->get();
-
-        $formattedteams = [];
-
-        foreach ($teams as $team) {
-            $formattedteams[] = [
+    
+        $formattedteams = $teams->map(function ($team) {
+            return [
+                'id' => $team->id,
                 'title_id' => $team->title_id,
                 'name' => $team->name,
                 'image' => $team->image,
@@ -1550,32 +1551,32 @@ return $request->all();
                 'designation' => $team->designation,
                 'sequence' => $team->sequence,
                 'is_active' => $team->is_active
-
             ];
-        }
-
+        });
+    
         $firstteamTitle = $teams->first()->title->name;
-
+    
         $data = [
             'status' => true,
             'message' => 'Here are our team member list:',
             'title' => $firstteamTitle,
-            'data' => $formattedteams
+            'data' => $formattedteams->sortBy('sequence')->values()->all()
         ];
-
+    
         return response()->json($data, 200);
     }
+    
 
     public function teammemberInfo()
     {
-        $teams = OurTeam::select(['title_id', 'name', 'image', 'department', 'designation', 'sequence', 'is_active'])
+        $teams = OurTeam::
+            select(['id','title_id', 'name', 'image', 'department', 'designation', 'sequence', 'is_active'])
             ->orderBy('sequence', 'ASC')
             ->get();
-
-        $formattedteams = [];
-
-        foreach ($teams as $team) {
-            $formattedteams[] = [
+    
+        $formattedteams = $teams->map(function ($team) {
+            return [
+                'id' => $team->id,
                 'title_id' => $team->title_id,
                 'name' => $team->name,
                 'image' => $team->image,
@@ -1583,19 +1584,18 @@ return $request->all();
                 'designation' => $team->designation,
                 'sequence' => $team->sequence,
                 'is_active' => $team->is_active
-
             ];
-        }
-
+        });
+    
         $firstteamTitle = $teams->first()->title->name;
-
+    
         $data = [
             'status' => true,
             'message' => 'Here are our team member list:',
             'title' => $firstteamTitle,
-            'data' => $formattedteams
+            'data' => $formattedteams->sortBy('sequence')->values()->all()
         ];
-
+    
         return response()->json($data, 200);
     }
 
@@ -1770,7 +1770,7 @@ return $request->all();
         $testimonial = new Testimonial();
         if ($panelimage = $request->file('image')) {
             $imageName1 = time() . '-' . uniqid() . '.' . $panelimage->getClientOriginalExtension();
-            $panelimage->move(public_path('Testimonial'), $imageName1);
+            $panelimage->move(public_path('testimonial'), $imageName1);
         }
 
         $testimonial->title_id = $request->title_id;
@@ -1810,12 +1810,12 @@ return $request->all();
         }
 
         if ($image1 = $request->file('image')) {
-            if ($testimonial->image && file_exists(public_path('Testimonial') . '/' . $testimonial->image)) {
-                unlink(public_path('Testimonial') . '/' . $testimonial->image);
+            if ($testimonial->image && file_exists(public_path('ourteam') . '/' . $testimonial->image)) {
+                unlink(public_path('ourteam') . '/' . $testimonial->image);
             }
 
             $imageName1 = time() . '-' . uniqid() . '.' . $image1->getClientOriginalExtension();
-            $image1->move(public_path('Testimonial'), $imageName1);
+            $image1->move(public_path('ourteam'), $imageName1);
 
             $testimonial->update([
                 'image' => $imageName1,

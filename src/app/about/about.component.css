@@ -1,0 +1,11 @@
+.main{
+    margin-top: 68px;
+}
+
+.active-status {
+    color: green;
+  }
+  
+  .inactive-status {
+    color: red;
+  }

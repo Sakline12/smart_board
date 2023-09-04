@@ -512,7 +512,7 @@ class DepartmentController extends Controller
 
         if ($image = $request->file('image')) {
             $imageName = time() . '-' . uniqid() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('Device image'), $imageName);
+            $image->move(public_path('deviceimage'), $imageName);
 
             $device_image = new DeviceImage();
             $device_image->image = $imageName;
@@ -555,7 +555,7 @@ class DepartmentController extends Controller
         }
 
         if ($image = $request->file('image')) {
-            $imagePath = public_path('Device image') . '/';
+            $imagePath = public_path('deviceimage') . '/';
 
             if ($deviceImage->image && file_exists($imagePath . $deviceImage->image)) {
                 unlink($imagePath . $deviceImage->image);
@@ -622,7 +622,7 @@ class DepartmentController extends Controller
 
         if ($image = $request->file('image')) {
             $imageName = time() . '-' . uniqid() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('presentation_image'), $imageName);
+            $image->move(public_path('presentationimage'), $imageName);
 
             $device_image = new PodiumPrsesntationImage();
             $device_image->image = $imageName;

@@ -1,0 +1,41 @@
+<div class="container">
+    <div class="row vh-100 d-flex align-items-center justify-content-center">
+      <div class="col-md-4">
+        <form class="p-4" (ngSubmit)="submit()" >
+          <div class="form-group form-outline  mb-4">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" id="form2Example17" class="form-control form-control-lg" [(ngModel)]="form.email" name="email" required />
+
+             <!-- <div *ngIf="submitted && f['email'].errors" class="invalid-feedback">
+
+                <div *ngIf="f['email'].errors['required']">
+                    Email Id is required
+                </div>
+                <div *ngIf="f['email'].errors['email']">
+                    Email must be a valid Email address
+                </div>
+            </div> -->
+        </div>
+      <div class="form-group form-outline mb-4">
+        <label for="password" class="form-label">Password</label>
+        <input type="password" id="form2Example27" class="form-control form-control-lg" [(ngModel)]="form.password" name="password" required />
+
+        <!-- <div *ngIf="submitted && f['password'].errors" class="invalid-feedback">
+
+            <div *ngIf="f['password'].errors['required']">
+               Password is required
+            </div>
+
+            <div *ngIf="f['password'].errors['minlength']">
+                Password must be atleast 6 Characters
+            </div>
+        </div> -->
+    </div>
+          <button type="submit" class="btn btn-secondary form-control">Submit</button>
+        </form>
+      </div>
+      <div class="col-md-6 d-none d-md-block">
+        <img src="assets/smartboard.jpg" alt="" class="rounded-3 mx-auto d-block">
+      </div>
+    </div>
+  </div>

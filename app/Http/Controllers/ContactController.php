@@ -48,7 +48,7 @@ class ContactController extends Controller
         $contact = new ContactIntroduction();
         if ($panelimage = $request->file('background_image')) {
             $imageName1 = time() . '-' . uniqid() . '.' . $panelimage->getClientOriginalExtension();
-            $panelimage->move(public_path('Contact'), $imageName1);
+            $panelimage->move(public_path('contact'), $imageName1);
         }
 
         $contact->title_id = $request->title_id;
@@ -83,12 +83,12 @@ class ContactController extends Controller
         }
 
         if ($image1 = $request->file('background_image')) {
-            if ($Contact->background_image && file_exists(public_path('Contact') . '/' . $Contact->background_image)) {
-                unlink(public_path('Contact') . '/' . $Contact->background_image);
+            if ($Contact->background_image && file_exists(public_path('contact') . '/' . $Contact->background_image)) {
+                unlink(public_path('contact') . '/' . $Contact->background_image);
             }
 
             $imageName1 = time() . '-' . uniqid() . '.' . $image1->getClientOriginalExtension();
-            $image1->move(public_path('Contact'), $imageName1);
+            $image1->move(public_path('contact'), $imageName1);
 
             $Contact->update([
                 'background_image' => $imageName1,
@@ -283,15 +283,15 @@ class ContactController extends Controller
             $mail->isSMTP();
             $mail->Host = "smtp.gmail.com";
             $mail->SMTPAuth = true;
-            $mail->Username = "saklineheemel51@gmail.com";
-            $mail->Password = 'fosrudjikgtiqhay';
+            $mail->Username = "bacbonapplication@gmail.com";
+            $mail->Password = 'lzhumcnodpywvyxu';
             $mail->Port = 587;
             $mail->SMTPSecure = "tls";
 
             // Email Settings
             $mail->isHTML(true);
             $mail->setFrom($email);
-            $mail->addAddress("saklineheemel51@gmail.com");
+            $mail->addAddress("bacbonapplication@gmail.com");
             $mail->Subject = "$email ($subject)";
             $mail->Body = $submit_message;
 

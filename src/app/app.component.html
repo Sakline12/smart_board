@@ -1,0 +1,7 @@
+<app-sidenav *ngIf="showHeader" [isSideNavOpen]="isSideNavOpen" [sidebarWidth]="sidebarWidth" [sidebarLeft]="sidebarLeft"></app-sidenav>
+<div class="">
+  <app-header *ngIf="showHeader" [mainMargin]="mainMargin" (toggleSideNavEvent)="toggleSideNav()"></app-header>
+  <app-main-content class="main" [mainMargin]="mainMargin">
+  </app-main-content>
+  <router-outlet (activate)="onRouterOutletActivate($event)"></router-outlet>
+</div>

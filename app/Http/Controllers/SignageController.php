@@ -52,12 +52,12 @@ class SignageController extends Controller
         $signage = new SignageIntroduction();
         if ($panelimage = $request->file('background_image')) {
             $imageName1 = time() . '-' . uniqid() . '.' . $panelimage->getClientOriginalExtension();
-            $panelimage->move(public_path('Signage intro'), $imageName1);
+            $panelimage->move(public_path('signageintro'), $imageName1);
         }
 
         if ($panelimage1 = $request->file('image')) {
             $imageName2 = time() . '-' . uniqid() . '.' . $panelimage1->getClientOriginalExtension();
-            $panelimage1->move(public_path('Signage intro'), $imageName2);
+            $panelimage1->move(public_path('signageintro'), $imageName2);
         }
 
         $signage->title_id = $request->title_id;
@@ -95,12 +95,12 @@ class SignageController extends Controller
         }
 
         if ($image1 = $request->file('background_image')) {
-            if ($signage->background_image && file_exists(public_path('Signage intro') . '/' . $signage->background_image)) {
-                unlink(public_path('Signage intro') . '/' . $signage->background_image);
+            if ($signage->background_image && file_exists(public_path('signageintro') . '/' . $signage->background_image)) {
+                unlink(public_path('signageintro') . '/' . $signage->background_image);
             }
 
             $imageName1 = time() . '-' . uniqid() . '.' . $image1->getClientOriginalExtension();
-            $image1->move(public_path('Signage intro'), $imageName1);
+            $image1->move(public_path('signageintro'), $imageName1);
 
             $signage->update([
                 'background_image' => $imageName1,
@@ -108,12 +108,12 @@ class SignageController extends Controller
         }
 
         if ($image2 = $request->file('image')) {
-            if ($signage->image && file_exists(public_path('Signage intro') . '/' . $signage->image)) {
-                unlink(public_path('Signage intro') . '/' . $signage->image);
+            if ($signage->image && file_exists(public_path('signageintro') . '/' . $signage->image)) {
+                unlink(public_path('signageintro') . '/' . $signage->image);
             }
 
             $imageName2 = time() . '-' . uniqid() . '.' . $image2->getClientOriginalExtension();
-            $image2->move(public_path('Signage intro'), $imageName2);
+            $image2->move(public_path('signageintro'), $imageName2);
 
             $signage->update([
                 'image' => $imageName2,
@@ -185,6 +185,7 @@ class SignageController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'title_id' => 'required',
+            'description'=>'required',
             'name' => 'required',
         ]);
 
@@ -215,6 +216,7 @@ class SignageController extends Controller
 
         $signage = new Signage();
         $signage->title_id = $request->title_id;
+        $signage->description=$request->description;
         $signage->name = $request->name;
         $signage->save();
 
@@ -235,8 +237,9 @@ class SignageController extends Controller
         }
     }
 
-    public function updateSignageItems(Request $request, $id)
+    public function updateSignageItems(Request $request)
     {
+        $id=$request->id;
         $signage = Signage::find($id);
         if (!$signage) {
             return response()->json([
@@ -246,6 +249,7 @@ class SignageController extends Controller
         }
 
         $signage->title_id = $request->title_id;
+        $signage->description=$request->description;
         $signage->name = $request->name;
         $signage->is_active = $request->is_active;
         $signage->save();
@@ -274,19 +278,18 @@ class SignageController extends Controller
 
         foreach ($signages as $signage) {
             $formattedsignages[] = [
+                'description'=>$signage->description,
                 'name' => $signage->name,
                 'is_active' => $signage->is_active
             ];
         }
 
         $titleName = $signages->first()->title->name;
-        $description = $signage->first()->title->description;
-
+       
         $data = [
             'status' => true,
             'message' => 'Here are our signage items list:',
             'title' => $titleName,
-            'description' => $description,
             'data' => $formattedsignages
         ];
 
@@ -295,25 +298,25 @@ class SignageController extends Controller
 
     public function signageInfo()
     {
-        $signages = Signage::get();
+        $signages = Signage::
+            get();
 
         $formattedsignages = [];
 
         foreach ($signages as $signage) {
             $formattedsignages[] = [
+                'description'=>$signage->description,
                 'name' => $signage->name,
                 'is_active' => $signage->is_active
             ];
         }
 
         $titleName = $signages->first()->title->name;
-        $description = $signage->first()->title->description;
-
+       
         $data = [
             'status' => true,
             'message' => 'Here are our signage items list:',
             'title' => $titleName,
-            'description' => $description,
             'data' => $formattedsignages
         ];
 
@@ -361,17 +364,17 @@ class SignageController extends Controller
         $signageslider = new SignageSlider();
         if ($panelimage = $request->file('image_one')) {
             $imageName1 = time() . '-' . uniqid() . '.' . $panelimage->getClientOriginalExtension();
-            $panelimage->move(public_path('Signage slide'), $imageName1);
+            $panelimage->move(public_path('signageslide'), $imageName1);
         }
 
         if ($panelimage1 = $request->file('image_two')) {
             $imageName2 = time() . '-' . uniqid() . '.' . $panelimage1->getClientOriginalExtension();
-            $panelimage1->move(public_path('Signage slide'), $imageName2);
+            $panelimage1->move(public_path('signageslide'), $imageName2);
         }
 
         if ($panelimage2 = $request->file('image_three')) {
             $imageName3 = time() . '-' . uniqid() . '.' . $panelimage2->getClientOriginalExtension();
-            $panelimage2->move(public_path('Signage slide'), $imageName3);
+            $panelimage2->move(public_path('signageslide'), $imageName3);
         }
 
         $signageslider->title_id = $request->title_id;
@@ -408,34 +411,34 @@ class SignageController extends Controller
         }
 
         if ($image1 = $request->file('image_one')) {
-            if ($signage_slider->image_one && file_exists(public_path('Signage slide') . '/' . $signage_slider->image_one)) {
-                unlink(public_path('Signage slide') . '/' . $signage_slider->image_one);
+            if ($signage_slider->image_one && file_exists(public_path('signageslide') . '/' . $signage_slider->image_one)) {
+                unlink(public_path('signageslide') . '/' . $signage_slider->image_one);
             }
 
             $imageName1 = time() . '-' . uniqid() . '.' . $image1->getClientOriginalExtension();
-            $image1->move(public_path('Signage slide'), $imageName1);
+            $image1->move(public_path('signageslide'), $imageName1);
 
             $signage_slider->image_one = $imageName1;
         }
 
         if ($image2 = $request->file('image_two')) {
-            if ($signage_slider->image_two && file_exists(public_path('Signage slide') . '/' . $signage_slider->image_two)) {
-                unlink(public_path('Signage slide') . '/' . $signage_slider->image_two);
+            if ($signage_slider->image_two && file_exists(public_path('signageslide') . '/' . $signage_slider->image_two)) {
+                unlink(public_path('signageslide') . '/' . $signage_slider->image_two);
             }
 
             $imageName2 = time() . '-' . uniqid() . '.' . $image2->getClientOriginalExtension();
-            $image2->move(public_path('Signage slide'), $imageName2);
+            $image2->move(public_path('signageslide'), $imageName2);
 
             $signage_slider->image_two = $imageName2;
         }
 
         if ($image3 = $request->file('image_three')) {
-            if ($signage_slider->image_three && file_exists(public_path('Signage slide') . '/' . $signage_slider->image_three)) {
-                unlink(public_path('Signage slide') . '/' . $signage_slider->image_three);
+            if ($signage_slider->image_three && file_exists(public_path('signageslide') . '/' . $signage_slider->image_three)) {
+                unlink(public_path('signageslide') . '/' . $signage_slider->image_three);
             }
 
             $imageName3 = time() . '-' . uniqid() . '.' . $image3->getClientOriginalExtension();
-            $image3->move(public_path('Signage slide'), $imageName3);
+            $image3->move(public_path('signageslide'), $imageName3);
 
             $signage_slider->image_three = $imageName3;
         }

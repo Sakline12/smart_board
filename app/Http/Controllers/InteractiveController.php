@@ -52,12 +52,12 @@ class InteractiveController extends Controller
         $slider = new InteractiveSlider();
         if ($panelimage = $request->file('background_image')) {
             $imageName1 = time() . '-' . uniqid() . '.' . $panelimage->getClientOriginalExtension();
-            $panelimage->move(public_path('Interactive slider'), $imageName1);
+            $panelimage->move(public_path('interactiveslider'), $imageName1);
         }
 
         if ($panelimage1 = $request->file('image')) {
             $imageName2 = time() . '-' . uniqid() . '.' . $panelimage1->getClientOriginalExtension();
-            $panelimage1->move(public_path('Interactive slider'), $imageName2);
+            $panelimage1->move(public_path('interactiveslider'), $imageName2);
         }
 
         $slider->title_id = $request->title_id;
@@ -84,8 +84,9 @@ class InteractiveController extends Controller
         }
     }
 
-    public function updateInteractiveSlider(Request $request, $id)
+    public function updateInteractiveSlider(Request $request)
     {
+        $id=$request->id;
         $slider = InteractiveSlider::find($id);
         if (!$slider) {
             return response()->json([
@@ -95,12 +96,12 @@ class InteractiveController extends Controller
         }
 
         if ($image1 = $request->file('background_image')) {
-            if ($slider->background_image && file_exists(public_path('Interactive slider') . '/' . $slider->background_image)) {
-                unlink(public_path('Interactive slider') . '/' . $slider->background_image);
+            if ($slider->background_image && file_exists(public_path('interactiveslider') . '/' . $slider->background_image)) {
+                unlink(public_path('interactiveslider') . '/' . $slider->background_image);
             }
 
             $imageName1 = time() . '-' . uniqid() . '.' . $image1->getClientOriginalExtension();
-            $image1->move(public_path('Interactive slider'), $imageName1);
+            $image1->move(public_path('interactiveslider'), $imageName1);
 
             $slider->update([
                 'background_image' => $imageName1,
@@ -108,12 +109,12 @@ class InteractiveController extends Controller
         }
 
         if ($image2 = $request->file('image')) {
-            if ($slider->image && file_exists(public_path('Interactive slider') . '/' . $slider->image)) {
-                unlink(public_path('Interactive slider') . '/' . $slider->image);
+            if ($slider->image && file_exists(public_path('interactiveslider') . '/' . $slider->image)) {
+                unlink(public_path('interactiveslider') . '/' . $slider->image);
             }
 
             $imageName2 = time() . '-' . uniqid() . '.' . $image2->getClientOriginalExtension();
-            $image2->move(public_path('Interactive slider'), $imageName2);
+            $image2->move(public_path('interactiveslider'), $imageName2);
 
             $slider->update([
                 'image' => $imageName2,
@@ -145,7 +146,7 @@ class InteractiveController extends Controller
 
     public function InteractiveSliderInfo()
     {
-        $slider = InteractiveSlider::where('is_active', true)->first();
+        $slider = InteractiveSlider::first();
 
         $data = [
             'status' => true,
@@ -159,7 +160,7 @@ class InteractiveController extends Controller
 
     public function InteractiveSliderDetails()
     {
-        $slider = InteractiveSlider::first();
+        $slider = InteractiveSlider::where('is_active', true)->first();
 
         if ($slider) {
             $data = [
@@ -229,8 +230,9 @@ class InteractiveController extends Controller
         }
     }
 
-    public function updateDevice(Request $request, $id)
+    public function updateDevice(Request $request)
     {
+        $id=$request->id;
         $device = Device::find($id);
         if (!$device) {
             return response()->json([
@@ -239,32 +241,32 @@ class InteractiveController extends Controller
             ], 404);
         }
 
-        if ($image1 = $request->file('image_id')) {
-            if ($device->image_id && file_exists(public_path('Device items') . '/' . $device->image_id)) {
-                unlink(public_path('Device items') . '/' . $device->image_id);
-            }
+        // if ($image1 = $request->file('image_id')) {
+        //     if ($device->image_id && file_exists(public_path('Device items') . '/' . $device->image_id)) {
+        //         unlink(public_path('Device items') . '/' . $device->image_id);
+        //     }
 
-            $imageName1 = time() . '-' . uniqid() . '.' . $image1->getClientOriginalExtension();
-            $image1->move(public_path('Device items'), $imageName1);
+        //     $imageName1 = time() . '-' . uniqid() . '.' . $image1->getClientOriginalExtension();
+        //     $image1->move(public_path('Device items'), $imageName1);
 
-            $device->update([
-                'image_id' => $imageName1,
-            ]);
-        }
+        //     $device->update([
+        //         'image_id' => $imageName1,
+        //     ]);
+        // }
 
         $device->update([
             'title_id' => $request->title_id,
-            'subtitle_id' => $request->subtitle_id,
+            'sub_title_id' => $request->sub_title_id,
+            // 'image_id'=>$request->image_id,
             'name' => $request->name,
             'is_active' => $request->is_active
         ]);
 
         $all_data = [
             'title_id' => $device->title->name,
-            'subtitle' => $device->subtitle->name,
-            'image' => $device->deviceimage->image,
+            'sub_title_id' => $device->sub_title_id,
+            // 'image' => $device->image_id,
             'name' => $device->name,
-            'icon_link' => $device->icon_link,
             'is_active' => $device->is_active
         ];
 
@@ -279,14 +281,17 @@ class InteractiveController extends Controller
 
     public function deviceInfo()
     {
-        $devices = Device::where('is_active', true)
-            ->select(['title_id', 'subtitle_id', 'name', 'image_id', 'is_active'])
+        $devices = Device::select(['id','title_id', 'subtitle_id', 'name', 'image_id', 'is_active'])
             ->get();
 
         $formatteddevice = [];
 
         foreach ($devices as $device) {
             $formatteddevice[] = [
+                'id'=>$device->id,
+                'title_id'=>$device->title_id,
+                'sub_title_id'=>$device->subtitle_id,
+                'image_id'=>$device->first()->deviceimage->image,
                 'name' => $device->name,
                 'is_active' => $device->is_active
             ];
@@ -309,7 +314,7 @@ class InteractiveController extends Controller
 
     public function deviceItems()
     {
-        $devices = Device::select(['title_id', 'subtitle_id', 'name', 'image_id', 'is_active'])
+        $devices = Device::where('is_active', true)->select(['title_id', 'subtitle_id', 'name', 'image_id', 'is_active'])
             ->get();
 
         $formatteddevice = [];
@@ -391,16 +396,35 @@ class InteractiveController extends Controller
         }
     }
 
-    public function updateInteractiveSpecification(Request $request, $id)
+    public function updateInteractiveSpecification(Request $request)
     {
+        $id = $request->id;
         $specification = InteractiveSpecification::find($id);
+    
         if (!$specification) {
             return response()->json([
                 'status' => false,
-                'message' => 'Specifications items not found',
+                'message' => 'Specifications item not found',
             ], 404);
         }
-
+    
+        $validator = Validator::make($request->all(), [
+            'title_id' => 'required',
+            'feature' => 'required',
+            'inch_86_ifp' => 'required',
+            'inch_75_ifp' => 'required',
+            'inch_65_ifp' => 'required',
+            'is_active' => 'required', // Make sure to add validation for is_active if needed
+        ]);
+    
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Validation Failed',
+                'errors' => $validator->errors()
+            ], 400);
+        }
+    
         $specification->update([
             'title_id' => $request->title_id,
             'feature' => $request->feature,
@@ -409,7 +433,7 @@ class InteractiveController extends Controller
             'inch_65_ifp' => $request->inch_65_ifp,
             'is_active' => $request->is_active
         ]);
-
+    
         $all_data = [
             'title_id' => $specification->title->name,
             'feature' => $specification->feature,
@@ -418,15 +442,16 @@ class InteractiveController extends Controller
             'inch_65_ifp' => $specification->inch_65_ifp,
             'is_active' => $specification->is_active
         ];
-
+    
         $data = [
             'status' => 200,
             'message' => "Specifications updated successfully",
             'data' => $all_data,
         ];
-
+    
         return response()->json($data);
     }
+    
 
     public function listOfInteractiveSpecification()
     {
@@ -459,13 +484,15 @@ class InteractiveController extends Controller
 
     public function infoOfInteractiveSpecification()
     {
-        $specifications = InteractiveSpecification::select(['title_id', 'feature', 'inch_86_ifp', 'inch_75_ifp', 'inch_65_ifp', 'is_active'])
+        $specifications = InteractiveSpecification::select(['id','title_id', 'feature', 'inch_86_ifp', 'inch_75_ifp', 'inch_65_ifp', 'is_active'])
             ->get();
 
         $formattedspecification = [];
 
         foreach ($specifications as $specification) {
             $formattedspecification[] = [
+                'id'=>$specification->id,
+                'title_id'=>$specification->title_id,
                 'feature' => $specification->feature,
                 'inch_86_ifp' => $specification->inch_86_ifp,
                 'inch_75_ifp' => $specification->inch_75_ifp,
@@ -533,8 +560,9 @@ class InteractiveController extends Controller
         }
     }
 
-    public function updateVideoLink(Request $request, $id)
+    public function updateVideoLink(Request $request)
     {
+        $id=$request->id;
         $video = InteractiveVideoLink::find($id);
         if (!$video) {
             return response()->json([
@@ -577,7 +605,7 @@ class InteractiveController extends Controller
 
     public function videoLinkInfo()
     {
-        $video = InteractiveVideoLink::first();
+        $video = InteractiveVideoLink::get();
         if ($video) {
 
             $data = [

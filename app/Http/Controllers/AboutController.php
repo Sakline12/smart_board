@@ -48,12 +48,12 @@ class AboutController extends Controller
         $about = new About();
         if ($panelimage = $request->file('background_image')) {
             $imageName1 = time() . '-' . uniqid() . '.' . $panelimage->getClientOriginalExtension();
-            $panelimage->move(public_path('About'), $imageName1);
+            $panelimage->move(public_path('about'), $imageName1);
         }
 
         if ($panelimage1 = $request->file('image')) {
             $imageName2 = time() . '-' . uniqid() . '.' . $panelimage1->getClientOriginalExtension();
-            $panelimage1->move(public_path('About'), $imageName2);
+            $panelimage1->move(public_path('about'), $imageName2);
         }
 
         $about->header_title = $request->header_title;
@@ -82,8 +82,9 @@ class AboutController extends Controller
         }
     }
 
-    public function updateAbout(Request $request, $id)
+    public function updateAbout(Request $request)
     {
+        $id=$request->id;
         $about = About::find($id);
         if (!$about) {
             return response()->json([
@@ -93,12 +94,12 @@ class AboutController extends Controller
         }
 
         if ($image1 = $request->file('background_image')) {
-            if ($about->background_image && file_exists(public_path('About') . '/' . $about->background_image)) {
-                unlink(public_path('About') . '/' . $about->background_image);
+            if ($about->background_image && file_exists(public_path('about') . '/' . $about->background_image)) {
+                unlink(public_path('about') . '/' . $about->background_image);
             }
 
             $imageName1 = time() . '-' . uniqid() . '.' . $image1->getClientOriginalExtension();
-            $image1->move(public_path('About'), $imageName1);
+            $image1->move(public_path('about'), $imageName1);
 
             $about->update([
                 'background_image' => $imageName1,
@@ -106,12 +107,12 @@ class AboutController extends Controller
         }
 
         if ($image2 = $request->file('image')) {
-            if ($about->image && file_exists(public_path('About') . '/' . $about->image)) {
-                unlink(public_path('About') . '/' . $about->image);
+            if ($about->image && file_exists(public_path('about') . '/' . $about->image)) {
+                unlink(public_path('about') . '/' . $about->image);
             }
 
             $imageName2 = time() . '-' . uniqid() . '.' . $image2->getClientOriginalExtension();
-            $image2->move(public_path('About'), $imageName2);
+            $image2->move(public_path('about'), $imageName2);
 
             $about->update([
                 'image' => $imageName2,

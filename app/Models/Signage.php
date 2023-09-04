@@ -11,6 +11,7 @@ class Signage extends Model
     protected $table='signages';
     protected $fillable=[
       'title_id',
+      'description',
       'name',
       'is_active'
     ];

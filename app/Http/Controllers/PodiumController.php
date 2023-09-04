@@ -248,23 +248,23 @@ class PodiumController extends Controller
         }
 
         if ($image1 = $request->file('image')) {
-            if ($podium->image && file_exists(public_path('Podium') . '/' . $podium->image)) {
-                unlink(public_path('Podium') . '/' . $podium->image);
+            if ($podium->image && file_exists(public_path('podium') . '/' . $podium->image)) {
+                unlink(public_path('podium') . '/' . $podium->image);
             }
 
             $imageName1 = time() . '-' . uniqid() . '.' . $image1->getClientOriginalExtension();
-            $image1->move(public_path('Podium'), $imageName1);
+            $image1->move(public_path('podium'), $imageName1);
 
             $podium->image = $imageName1;
         }
 
         if ($image2 = $request->file('background_image')) {
-            if ($podium->background_image && file_exists(public_path('Podium') . '/' . $podium->background_image)) {
-                unlink(public_path('Podium') . '/' . $podium->background_image);
+            if ($podium->background_image && file_exists(public_path('podium') . '/' . $podium->background_image)) {
+                unlink(public_path('podium') . '/' . $podium->background_image);
             }
 
             $imageName2 = time() . '-' . uniqid() . '.' . $image2->getClientOriginalExtension();
-            $image2->move(public_path('Podium'), $imageName2);
+            $image2->move(public_path('podium'), $imageName2);
 
             $podium->background_image = $imageName2;
         }
@@ -491,17 +491,17 @@ class PodiumController extends Controller
         $wirelessdevice = new WirelessDevice();
         if ($panelimage = $request->file('image_one')) {
             $imageName1 = time() . '-' . uniqid() . '.' . $panelimage->getClientOriginalExtension();
-            $panelimage->move(public_path('Wireless device'), $imageName1);
+            $panelimage->move(public_path('wirelessdevice'), $imageName1);
         }
 
         if ($panelimage1 = $request->file('image_two')) {
             $imageName2 = time() . '-' . uniqid() . '.' . $panelimage1->getClientOriginalExtension();
-            $panelimage1->move(public_path('Wireless device'), $imageName2);
+            $panelimage1->move(public_path('wirelessdevice'), $imageName2);
         }
 
         if ($panelimage2 = $request->file('image_three')) {
             $imageName3 = time() . '-' . uniqid() . '.' . $panelimage2->getClientOriginalExtension();
-            $panelimage2->move(public_path('Wireless device'), $imageName3);
+            $panelimage2->move(public_path('wirelessdevice'), $imageName3);
         }
 
         $wirelessdevice->title_id = $request->title_id;
@@ -538,34 +538,34 @@ class PodiumController extends Controller
         }
 
         if ($image1 = $request->file('image_one')) {
-            if ($wirelessdevice->image_one && file_exists(public_path('Wireless device') . '/' . $wirelessdevice->image_one)) {
-                unlink(public_path('Wireless device') . '/' . $wirelessdevice->image_one);
+            if ($wirelessdevice->image_one && file_exists(public_path('wirelessdevice') . '/' . $wirelessdevice->image_one)) {
+                unlink(public_path('wirelessdevice') . '/' . $wirelessdevice->image_one);
             }
 
             $imageName1 = time() . '-' . uniqid() . '.' . $image1->getClientOriginalExtension();
-            $image1->move(public_path('Wireless device'), $imageName1);
+            $image1->move(public_path('wirelessdevice'), $imageName1);
 
             $wirelessdevice->image_one = $imageName1;
         }
 
         if ($image2 = $request->file('image_two')) {
-            if ($wirelessdevice->image_two && file_exists(public_path('Wireless device') . '/' . $wirelessdevice->image_two)) {
-                unlink(public_path('Wireless device') . '/' . $wirelessdevice->image_two);
+            if ($wirelessdevice->image_two && file_exists(public_path('wirelessdevice') . '/' . $wirelessdevice->image_two)) {
+                unlink(public_path('wirelessdevice') . '/' . $wirelessdevice->image_two);
             }
 
             $imageName2 = time() . '-' . uniqid() . '.' . $image2->getClientOriginalExtension();
-            $image2->move(public_path('Wireless device'), $imageName2);
+            $image2->move(public_path('wirelessdevice'), $imageName2);
 
             $wirelessdevice->image_two = $imageName2;
         }
 
         if ($image3 = $request->file('image_three')) {
-            if ($wirelessdevice->image_three && file_exists(public_path('Wireless device') . '/' . $wirelessdevice->image_three)) {
-                unlink(public_path('Wireless device') . '/' . $wirelessdevice->image_three);
+            if ($wirelessdevice->image_three && file_exists(public_path('wirelessdevice') . '/' . $wirelessdevice->image_three)) {
+                unlink(public_path('wirelessdevice') . '/' . $wirelessdevice->image_three);
             }
 
             $imageName3 = time() . '-' . uniqid() . '.' . $image3->getClientOriginalExtension();
-            $image3->move(public_path('Wireless device'), $imageName3);
+            $image3->move(public_path('wirelessdevice'), $imageName3);
 
             $wirelessdevice->image_three = $imageName3;
         }
@@ -660,7 +660,7 @@ class PodiumController extends Controller
         $anotation = new Anotation();
         if ($panelimage = $request->file('background_image')) {
             $imageName1 = time() . '-' . uniqid() . '.' . $panelimage->getClientOriginalExtension();
-            $panelimage->move(public_path('Anotation'), $imageName1);
+            $panelimage->move(public_path('anotation'), $imageName1);
         }
 
 
@@ -700,12 +700,12 @@ class PodiumController extends Controller
         }
 
         if ($image1 = $request->file('background_image')) {
-            if ($anotation->background_image && file_exists(public_path('Anotation') . '/' . $anotation->background_image)) {
-                unlink(public_path('Anotation') . '/' . $anotation->background_image);
+            if ($anotation->background_image && file_exists(public_path('anotation') . '/' . $anotation->background_image)) {
+                unlink(public_path('anotation') . '/' . $anotation->background_image);
             }
 
             $imageName1 = time() . '-' . uniqid() . '.' . $image1->getClientOriginalExtension();
-            $image1->move(public_path('Anotation'), $imageName1);
+            $image1->move(public_path('anotation'), $imageName1);
 
             $anotation->background_image = $imageName1;
         }
@@ -802,7 +802,7 @@ class PodiumController extends Controller
         $feature = new PodiumFeature();
         if ($panelimage1 = $request->file('background_image')) {
             $imageName2 = time() . '-' . uniqid() . '.' . $panelimage1->getClientOriginalExtension();
-            $panelimage1->move(public_path('Podium feature'), $imageName2);
+            $panelimage1->move(public_path('podiumfeature'), $imageName2);
         }
 
         $feature->title_id = $request->title_id;
@@ -839,12 +839,12 @@ class PodiumController extends Controller
         }
 
         if ($image1 = $request->file('background_image')) {
-            if ($feature->background_image && file_exists(public_path('Podium feature') . '/' . $feature->background_image)) {
-                unlink(public_path('Podium feature') . '/' . $feature->background_image);
+            if ($feature->background_image && file_exists(public_path('podiumfeature') . '/' . $feature->background_image)) {
+                unlink(public_path('podiumfeature') . '/' . $feature->background_image);
             }
 
             $imageName1 = time() . '-' . uniqid() . '.' . $image1->getClientOriginalExtension();
-            $image1->move(public_path('Podium feature'), $imageName1);
+            $image1->move(public_path('podiumfeature'), $imageName1);
 
             $feature->background_image = $imageName1;
         }
@@ -904,9 +904,9 @@ class PodiumController extends Controller
         $validator = Validator::make($request->all(), [
             'title_id' => 'required',
             'subtitle_id' => 'required',
-            'image_id_one' => 'required',
-            'image_id_two' => 'required',
-            'image_id_three' => 'required',
+            'image_one' => 'required',
+            'image_two' => 'required',
+            'image_three' => 'required',
             'name' => 'required',
         ]);
     
@@ -934,12 +934,27 @@ class PodiumController extends Controller
                 'data' => [],
             ], 409);
         }
+
+        $podium = new PodiumPresentation();
+        if ($panelimage = $request->file('image_one')) {
+            $imageName1 = time() . '-' . uniqid() . '.' . $panelimage->getClientOriginalExtension();
+            $panelimage->move(public_path('podium_presentation'), $imageName1);
+        }
+        if ($panelimage1 = $request->file('image_two')) {
+            $imageName2 = time() . '-' . uniqid() . '.' . $panelimage1->getClientOriginalExtension();
+            $panelimage1->move(public_path('podium_presentation'), $imageName2);
+        }
+        if ($panelimage2 = $request->file('image_three')) {
+            $imageName3 = time() . '-' . uniqid() . '.' . $panelimage2->getClientOriginalExtension();
+            $panelimage2->move(public_path('podium_presentation'), $imageName3);
+        }
+
         $presentation = new PodiumPresentation();
         $presentation->title_id = $request->input('title_id');
         $presentation->subtitle_id = $request->input('subtitle_id');
-        $presentation->image_id_one = $request->input('image_id_one');
-        $presentation->image_id_two = $request->input('image_id_two');
-        $presentation->image_id_three = $request->input('image_id_three');
+        $presentation->image_one = $imageName1;
+        $presentation->image_two = $imageName2;
+        $presentation->image_three = $imageName3;
         $presentation->name = $request->input('name');
     
         if ($presentation->save()) {
@@ -959,8 +974,9 @@ class PodiumController extends Controller
         }
     }
 
-    public function updatePodiumPresentation(Request $request, $id)
+    public function updatePodiumPresentation(Request $request)
     {
+        $id=$request->id;
         $presentation = PodiumPresentation::find($id);
         if (!$presentation) {
             return response()->json([
@@ -968,20 +984,54 @@ class PodiumController extends Controller
                 'message' => 'presentation prsentation not found',
             ], 404);
         }
+
+
+        if ($image1 = $request->file('image_one')) {
+            if ($presentation->image_one && file_exists(public_path('podium_presentation') . '/' . $presentation->image_one)) {
+                unlink(public_path('podium_presentation') . '/' . $presentation->image_one);
+            }
+
+            $imageName1 = time() . '-' . uniqid() . '.' . $image1->getClientOriginalExtension();
+            $image1->move(public_path('podium_presentation'), $imageName1);
+
+            $presentation->image_one = $imageName1;
+        }
+
+        if ($image2 = $request->file('image_two')) {
+            if ($presentation->image_two && file_exists(public_path('podium_presentation') . '/' . $presentation->image_two)) {
+                unlink(public_path('podium_presentation') . '/' . $presentation->image_two);
+            }
+
+            $imageName2 = time() . '-' . uniqid() . '.' . $image2->getClientOriginalExtension();
+            $image2->move(public_path('podium_presentation'), $imageName2);
+
+            $presentation->image_two = $imageName2;
+        }
+
+        if ($image3 = $request->file('image_three')) {
+            if ($presentation->image_three && file_exists(public_path('podium_presentation') . '/' . $presentation->image_three)) {
+                unlink(public_path('podium_presentation') . '/' . $presentation->image_three);
+            }
+
+            $imageName3 = time() . '-' . uniqid() . '.' . $image3->getClientOriginalExtension();
+            $image3->move(public_path('podium_presentation'), $imageName3);
+
+            $presentation->image_three = $imageName3;
+        }
+
+
+
         $presentation->title_id = $request->title_id;
         $presentation->subtitle_id = $request->subtitle_id;
-        $presentation->image_id_one = $request->image_id_one;
-        $presentation->image_id_two = $request->image_id_two;
-        $presentation->image_id_three = $request->image_id_three;
         $presentation->name = $request->name;
         $presentation->is_active = $request->is_active;
         $presentation->save();
         $all_data = [
             'subtitle_id' => $presentation->subtitle_id,
             'title_id' => $presentation->title_id,
-            'image_id_one' => $presentation->image_id_one,
-            'image_id_two' => $presentation->image_id_two,
-            'image_id_three' => $presentation->image_id_three,
+            'image_one' => $presentation->image_one,
+            'image_two' => $presentation->image_two,
+            'image_three' => $presentation->image_three,
             'is_active' => $presentation->is_active
         ];
 
@@ -1032,13 +1082,16 @@ class PodiumController extends Controller
 
     public function podiumPrsentationInfo()
     {
-        $presentations = PodiumPresentation::with(['title', 'subtitle', 'imageOne', 'imageTwo', 'imageThree'])
+        $presentations = PodiumPresentation::with(['title', 'subtitle'])
             ->get();
 
         $formattedpresentations = [];
 
         foreach ($presentations as $presentation) {
             $formattedpresentations[] = [
+                'image_one'=>$presentation->image_one,
+                'image_two'=>$presentation->image_two,
+                'image_three'=>$presentation->image_three,
                 'name' => $presentation->name,
                 'is_active' => $presentation->is_active
             ];
@@ -1046,18 +1099,12 @@ class PodiumController extends Controller
 
         $titleName = $presentations->first()->title->name;
         $subtitleName = $presentations->first()->subtitle->name;
-        $imageIdOne = $presentations->first()->imageOne->image;
-        $imageIdTwo = $presentations->first()->imageTwo->image;
-        $imageIdThree = $presentations->first()->imageThree->image;
 
         $data = [
             'status' => true,
             'message' => 'Here are our device items list:',
             'title' => $titleName,
             'sub_title' => $subtitleName,
-            'image_one' => $imageIdOne,
-            'image_two' => $imageIdTwo,
-            'image_three' => $imageIdThree,
             'data' => $formattedpresentations
         ];
 

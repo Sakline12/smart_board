@@ -1,0 +1,13 @@
+.main {
+    transition: margin-left 0.5s;
+  } 
+  .content-container {
+    display: flex;
+    position: relative;
+
+  }
+  .main {
+    flex: 1;
+  }
+  
+  

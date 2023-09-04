@@ -8,13 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class PodiumPresentation extends Model
 {
     use HasFactory;
-    protected $table='podium_prsentations';
+    protected $table='podium_presentations';
     protected $fillable=[
       'title_id',
       'subtitle_id',
-      'image_id_one',
-      'image_id_two',
-      'image_id_three',
+      'image_one',
+      'image_two',
+      'image_three',
       'name',
       'is_active'
     ];
@@ -29,19 +29,19 @@ class PodiumPresentation extends Model
         return $this->belongsTo(subtitle::class);
     }
 
-    public function imageOne()
-    {
-        return $this->belongsTo(PodiumPrsesntationImage::class, 'image_id_one');
-    }
+    // public function imageOne()
+    // {
+    //     return $this->belongsTo(PodiumPrsesntationImage::class, 'image_id_one');
+    // }
     
-    public function imageTwo()
-    {
-        return $this->belongsTo(PodiumPrsesntationImage::class, 'image_id_two');
-    }
+    // public function imageTwo()
+    // {
+    //     return $this->belongsTo(PodiumPrsesntationImage::class, 'image_id_two');
+    // }
     
-    public function imageThree()
-    {
-        return $this->belongsTo(PodiumPrsesntationImage::class, 'image_id_three');
-    }
+    // public function imageThree()
+    // {
+    //     return $this->belongsTo(PodiumPrsesntationImage::class, 'image_id_three');
+    // }
 
 }

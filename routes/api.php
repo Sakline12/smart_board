@@ -90,7 +90,7 @@ Route::get('client-info',[IndexController::class,'clientInfo']);
 
 //Our teams
 Route::post('create-our-teams',[IndexController::class,'createOurTeam']);
-Route::post('update-our-team-member/{id}',[IndexController::class,'updateOurTeam']);
+Route::post('update-our-team-member',[IndexController::class,'updateOurTeam']);
 Route::get('team-memeber-info',[IndexController::class,'teamMemberInfo']);
 
 
@@ -106,28 +106,28 @@ Route::get('testimonial-info',[IndexController::class,'testimonialInfo']);
 
 //About
 Route::post('create-about',[AboutController::class,'createAbout']);
-Route::post('about-update/{id}',[AboutController::class,'updateAbout']);
+Route::post('about-update',[AboutController::class,'updateAbout']);
 Route::get('about-info',[AboutController::class,'aboutInformation']);
 
 //Interactie panel
 Route::post('create-interactive-slider',[InteractiveController::class,'createInteractiveSlider']);
-Route::post('update-interactive-slider/{id}',[InteractiveController::class,'updateInteractiveSlider']);
+Route::post('update-interactive-slider',[InteractiveController::class,'updateInteractiveSlider']);
 Route::get('interactive-slider-info',[InteractiveController::class,'InteractiveSliderInfo']);
 
 //Device
 Route::post('create-device',[InteractiveController::class,'createDevice']);
-Route::post('update-device-item/{id}',[InteractiveController::class,'updateDevice']);
+Route::post('update-device-item',[InteractiveController::class,'updateDevice']);
 Route::get('device-info',[InteractiveController::class,'deviceInfo']);
 
 //Specification
 Route::post('create-interactive-specification',[InteractiveController::class,'createInteractiveSpecification']);
-Route::post('update-interactive-specification/{id}',[InteractiveController::class,'updateInteractiveSpecification']);
-Route::get('info-of-InteractiveSpecification',[InteractiveController::class,'infoOfInteractiveSpecification']);
+Route::post('update-interactive-specification',[InteractiveController::class,'updateInteractiveSpecification']);
+Route::get('info-of-interactive-specification',[InteractiveController::class,'infoOfInteractiveSpecification']);
 
 
 //video link
 Route::post('create-video-link',[InteractiveController::class,'addVideoLink']);
-Route::post('update-video-link/{id}',[InteractiveController::class,'updateVideoLink']);
+Route::post('update-video-link',[InteractiveController::class,'updateVideoLink']);
 Route::get('video-link-info',[InteractiveController::class,'videoLinkInfo']);
 
 
@@ -164,7 +164,7 @@ Route::get('info-podium-feature',[PodiumController::class,'infoPodiumFeature']);
 
 //Podium psenatation
 Route::post('create-podium-presentation',[PodiumController::class,'createPodiumPresentation']);
-Route::post('update-podium-presentation/{id}',[PodiumController::class,'updatePodiumPresentation']);
+Route::post('update-podium-presentation',[PodiumController::class,'updatePodiumPresentation']);
 Route::get('podium-prsentation-info',[PodiumController::class,'podiumPrsentationInfo']);
 
 
@@ -175,7 +175,7 @@ Route::get('signage-introduction-info',[SignageController::class,'signageIntrodu
 
 //Signage
 Route::post('signage-create',[SignageController::class,'createSignage']);
-Route::post('update-a-signage-itme/{id}',[SignageController::class,'updateSignageItems']);
+Route::post('update-a-signage-item',[SignageController::class,'updateSignageItems']);
 Route::get('signage-info',[SignageController::class,'signageInfo']);
 
 //signage slider

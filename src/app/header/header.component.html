@@ -1,0 +1,22 @@
+<div class="header col-md-12 d-inline-flex fixed-header" [ngStyle]="{'margin-left.px': mainMargin}">
+  <button class="toggle-button col-md-1" (click)="toggleSideNav()">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+  <div class="top col-md-8 d-inline-flex justify-content-start">
+    <h2 class="title">{{ routeTitle }}</h2>
+  </div>
+  <div class="col-md-2 d-flex flex-column position-fixed logo" (mouseover)="isDropdownOpen = true" (mouseleave)="isDropdownOpen = false">
+    <img src="/assets/profile.jpg" alt="image" class="img-fluid">
+    <div class="dropdown-icon  "*ngIf="isDropdownOpen">
+      <i class="fa fa-caret-down"></i> 
+    </div>
+    <div class="dropdown" [ngClass]="{ 'show': isDropdownOpen }">
+      <ul class="dropdown-menu p-0" aria-labelledby="dropdownMenuButton">
+        <li><a class="dropdown-item" href="#"> <i class="fa-solid fa-user text-info"></i> Profile</a></li>
+        <li><a class="dropdown-item" href="#"><i class="fa-solid fa-right-from-bracket text-info"></i> Logout</a></li>
+      </ul>
+    </div>
+  </div>  
+</div>
